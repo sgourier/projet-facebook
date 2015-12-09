@@ -1,0 +1,18 @@
+<<<<<<< HEAD
+/web/bundles/
+/app/bootstrap.php.cache
+/app/cache/*
+/app/config/parameters.yml
+/app/logs/*
+!app/cache/.gitkeep
+!app/logs/.gitkeep
+/app/phpunit.xml
+/build/
+/vendor/
+/bin/
+/composer.phar
+=======
+vendor/
+.env
+/.idea
+>>>>>>> f394218c8d75d6517e120bcbbaccfe065a7ac1eb
