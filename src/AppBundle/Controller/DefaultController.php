@@ -13,11 +13,12 @@ class DefaultController extends Controller
      */
     public function indexAction(Request $request)
     {
+	    $fbServ = $this->container->get('facebook_service');
 
-	    $item = $this->getDoctrine()->getManager()->getRepository('AppBundle:Config')->find(1);
+	    $fb = $fbServ->fbLogger();
 
         return $this->render('default/index.html.twig', array(
-            'base_dir' => $item->getThemeColor()
+            'base_dir' => ''
         ));
     }
 }
