@@ -13,12 +13,25 @@ class DefaultController extends Controller
      */
     public function indexAction(Request $request)
     {
-	    $fbServ = $this->container->get('facebook_service');
+	    $session = $this->get('session');
+	    $userToken = $session->get('facebook_access_token', null);
 
-	    $fb = $fbServ->fbLogger();
-
-        return $this->render('default/index.html.twig', array(
-            'base_dir' => ''
-        ));
+	    if($userToken == null )
+	    {
+		    return $this->redirect($this->generateUrl('login'));
+	    }
+	    else if($userToken == 'error')
+	    {
+		    return $this->render('default/index.html.twig', array(
+			    'testString' => 'error'
+		    ));
+	    }
+		else
+		{
+			$user = $this->container->get('facebook_service')->getFBUser($userToken);
+			return $this->render('default/index.html.twig', array(
+				'testString' => $user['name']
+			));
+		}
     }
 }

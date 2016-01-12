@@ -9,7 +9,7 @@
 namespace AppBundle\Services;
 use Facebook;
 
-require_once __DIR__ . '/../facebook-php-sdk/src/Facebook/autoload.php';
+//require_once __DIR__ . '/../facebook-php-sdk/src/Facebook/autoload.php';
 
 class FacebookFunctions
 {
@@ -25,5 +25,12 @@ class FacebookFunctions
 			'app_secret' => '071b3100ebaa4b3d6147474399b2840f',
 			'default_graph_version' => 'v2.5',
 		]);
+	}
+
+	function getFBUser($token)
+	{
+		$fb = $this->fbLogger();
+		$requestUserName = $fb->get('/me?fields=gender,email,birthday,name,first_name',$token);
+		return $requestUserName->getGraphUser();
 	}
 }
