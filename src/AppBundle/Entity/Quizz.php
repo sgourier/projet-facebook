@@ -3,12 +3,15 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Quizz
  *
  * @ORM\Table(name="quizz")
  * @ORM\Entity(repositoryClass="AppBundle\Entity\QuizzRepository")
+ * @ORM\HasLifecycleCallbacks
  */
 class Quizz
 {
@@ -31,21 +34,21 @@ class Quizz
     /**
      * @var string
      *
-     * @ORM\Column(name="description", type="text")
+     * @ORM\Column(name="description", type="text", nullable=true)
      */
     private $description;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="giftText", type="text")
+     * @ORM\Column(name="giftText", type="text", nullable=true)
      */
     private $giftText;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="giftImg", type="text")
+     * @var string $giftImg
+     * @Assert\Image( maxSize = "1024k", mimeTypesMessage = "Merci de fournir une image valide")
+     * @ORM\Column(name="giftImg", type="string", length=255, nullable=true)
      */
     private $giftImg;
 
@@ -84,6 +87,13 @@ class Quizz
      */
     private $active;
 
+	function __construct()
+	{
+		$this->active  = true;
+		$this->dateUpd = new \DateTime();
+		$this->dateAdd = new \DateTime();
+		$this->giftImg = null;
+	}
 
     /**
      * Get id
@@ -162,29 +172,6 @@ class Quizz
     public function getGiftText()
     {
         return $this->giftText;
-    }
-
-    /**
-     * Set giftImg
-     *
-     * @param string $giftImg
-     * @return Quizz
-     */
-    public function setGiftImg($giftImg)
-    {
-        $this->giftImg = $giftImg;
-
-        return $this;
-    }
-
-    /**
-     * Get giftImg
-     *
-     * @return string 
-     */
-    public function getGiftImg()
-    {
-        return $this->giftImg;
     }
 
     /**
@@ -301,4 +288,110 @@ class Quizz
     {
         return $this->active;
     }
+
+	/**
+	 * Set giftImg
+	 *
+	 * @param string $giftImg
+	 *
+	 * @return Quizz
+	 */
+	public function setGiftImg($giftImg)
+	{
+		$this->giftImg = $giftImg;
+
+		return $this;
+	}
+
+	/**
+	 * Get giftImg
+	 *
+	 * @return string
+	 */
+	public function getGiftImg()
+	{
+		return $this->giftImg;
+	}
+
+	public function getFullImagePath()
+	{
+		return null === $this->giftImg ? null : $this->getUploadRootDir() . $this->giftImg;
+	}
+
+	public function getWebPath()
+	{
+		return null === $this->giftImg ? null : $this->getUploadDir().'/'.$this->giftImg;
+	}
+
+	protected function getUploadDir()
+	{
+		return 'upload/quizz/'.$this->getId();
+	}
+
+	protected function getUploadRootDir() {
+		// the absolute directory path where uploaded documents should be saved
+		return $this->getTmpUploadRootDir().$this->getId()."/";
+	}
+
+	protected function getTmpUploadRootDir() {
+		// the absolute directory path where uploaded documents should be saved
+		return realpath('./') . '/upload/quizz/';
+	}
+
+	/**
+	 * @ORM\PrePersist()
+	 * @ORM\PreUpdate()
+	 */
+	public function uploadImage() {
+		// the file property can be empty if the field is not required
+		$img = $this->giftImg;
+
+		if ( null !== $img && $img instanceof UploadedFile && file_exists( $img->getPathname() ) && $img->getPath() != $this->getUploadRootDir())
+		{
+			if ( ! $this->id )
+			{
+				$img->move( $this->getTmpUploadRootDir(), $img->getFilename() . "." . $img->getClientOriginalExtension() );
+			}
+			else
+			{
+				if ( ! is_dir( $this->getUploadRootDir() ) )
+				{
+					mkdir( $this->getUploadRootDir() );
+				}
+				$img->move( $this->getUploadRootDir(), $img->getFilename() . "." . $img->getClientOriginalExtension() );
+			}
+			$this->setGiftImg( $img->getFilename() . "." . $img->getClientOriginalExtension() );
+		}
+
+	}
+
+	/**
+	 * @ORM\PostPersist()
+	 * @ORM\PostUpdate()
+	 */
+	public function moveImage()
+	{
+		if ( null !== $this->giftImg && file_exists( $this->getTmpUploadRootDir() . $this->giftImg))
+		{
+			if ( ! is_dir( $this->getUploadRootDir() ) )
+			{
+				mkdir( $this->getUploadRootDir() );
+			}
+
+			copy( $this->getTmpUploadRootDir() . $this->giftImg, $this->getFullImagePath( false ) );
+			unlink( $this->getTmpUploadRootDir() . $this->giftImg );
+		}
+	}
+
+	/**
+	 * @ORM\PreRemove()
+	 */
+	public function removeImage()
+	{
+		$cover = false;
+		if(file_exists($this->getFullImagePath($cover)))
+			unlink($this->getFullImagePath($cover));
+		if(is_dir($this->getUploadRootDir($cover)))
+			rmdir($this->getUploadRootDir($cover));
+	}
 }
