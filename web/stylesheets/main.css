@@ -1,7 +1,6 @@
 @font-face {
     font-family: texgy;
     src: url(../font/texgyreadventor-bold.otf);
-<<<<<<< HEAD
 }
 body {
   margin: 0px;
@@ -89,88 +88,4 @@ a {
 .hidden
 {
     display: none;
-=======
->>>>>>> origin/master
-}
-body {
-  margin: 0px;
-}
-nav{
-   background-color: #69CBAA;
-    color:white;
-    font-size:50px;
-}
-
-a {
-    color: #69CBAA;
-}
-
-#nav_title{
-  font-family: "texgy";
-}
-
-.cadre{
-    font-family: "texgy";
-    color:#69CBAA;
-    position:absolute;
-    top:17%;
-    background-color: #FFFFFF;
-    border:#69CBAA 3px solid;
-    border-radius: 100px;
-}
-
-.cadre1{
-    float:left;
-    left:5%;
-    min-width:50%;
-    max-width:50%;
-    min-height:80%;
-    max-height:80%;
-}
-
-.cadre2{
-    float:left;
-    left:65%;
-    min-width:30%;
-    max-width:30%;
-    min-height:80%;
-    max-height:80%;
-}
-
-.cadre2 li{
-    list-style-type: none;
-}
-
-.title{
-    font-size:40px;
-    min-height:60px;
-    max-height:60px;
-    max-width:80%;
-}
-
-.description{
-    font-size:20px;
-    min-height:110px;
-    max-height:110px;
-    margin-top:10px;
-    max-width:80%;
-}
-
-.img_lot{
-    min-height:100px;
-    max-height:110px;
-    margin-top:10px;
-    max-width:80%;
-}
-
-.lot{
-    font-size:20px;
-    min-height:120px;
-    max-height:110px;
-    margin-top:10px;
-    max-width:80%;
-}
-
-.liste{
-    margin:10%;
 }
