@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="cadre cadre1" align="center">
+        <div class="title">
+            {{ quizz.title }}
+        </div>
+        <div class="description">
+            {{ quizz.description }}
+        </div>
+        {% if quizz.giftImg is not null and quizz.giftText is not null%}
+            <div class="img_lot">
+                <img src="{{ asset(quizz.giftImg) }}" alt="Example"/>
+            </div>
+            <div class="lot">
+                {{ quizz.giftText }}
+            </div>
+        {% endif %}
+    </div>
+    <div class="cadre cadre2">
+        <ul class="liste">
+            {# Nécéssite un tableau de type User 1 a 10 et en 11 l'utilisateur actuel #}
+            {% for user in users %}
+            <li>
+                {% if loop.index!=11 %}
+                    {{ loop.index }}
+                {% else %}
+                    </br> {{ classement }}
+                {% endif %}
+                . {{ user.nom }} {{ user.prenom }}</li>
+            {% endfor %}
+            {# envoie vers la page des resultat avec l'id du quizz (en attente de la page classement)#}
+            </br><li><a href="#">Voir plus ...</a></li>
+        </ul>
+    </div>
+{% endblock %}

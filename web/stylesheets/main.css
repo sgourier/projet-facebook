@@ -1,40 +1,86 @@
-.jumbotron {
-  background: #532F8C;
-  color: white;
-  padding-bottom: 80px;
+@font-face {
+    font-family: texgy;
+    src: url(../font/texgyreadventor-bold.otf);
 }
-.jumbotron .btn-primary {
-  background: #845ac7;
-  border-color: #845ac7;
+body {
+  margin: 0px;
 }
-.jumbotron .btn-primary:hover {
-  background: #7646c1;
-}
-.jumbotron p {
-  color: #d9ccee;
-  max-width: 75%;
-  margin: 1em auto 2em;
-}
-.jumbotron h1 {
-  font-size: 40px;
-}
-.navbar + .jumbotron {
-  margin-top: -20px;
-}
-.jumbotron .lang-logo {
-  display: block;
-  background: #B01302;
-  border-radius: 50%;
-  overflow: hidden;
-  width: 100px;
-  height: 100px;
-  margin: auto;
-  border: 2px solid white;
-}
-.jumbotron .lang-logo img {
-  max-width: 100%;
+nav{
+   background-color: #69CBAA;
+    color:white;
+    font-size:50px;
 }
 
-nav{
-    background-color: #69CBAA;
+a {
+    color: #69CBAA;
+}
+
+#nav_title{
+  font-family: "texgy";
+}
+
+.cadre{
+    font-family: "texgy";
+    color:#69CBAA;
+    position:absolute;
+    top:17%;
+    background-color: #FFFFFF;
+    border:#69CBAA 3px solid;
+    border-radius: 100px;
+}
+
+.cadre1{
+    float:left;
+    left:5%;
+    min-width:50%;
+    max-width:50%;
+    min-height:80%;
+    max-height:80%;
+}
+
+.cadre2{
+    float:left;
+    left:65%;
+    min-width:30%;
+    max-width:30%;
+    min-height:80%;
+    max-height:80%;
+}
+
+.cadre2 li{
+    list-style-type: none;
+}
+
+.title{
+    font-size:40px;
+    min-height:60px;
+    max-height:60px;
+    max-width:80%;
+}
+
+.description{
+    font-size:20px;
+    min-height:110px;
+    max-height:110px;
+    margin-top:10px;
+    max-width:80%;
+}
+
+.img_lot{
+    min-height:100px;
+    max-height:110px;
+    margin-top:10px;
+    max-width:80%;
+}
+
+.lot{
+    font-size:20px;
+    min-height:120px;
+    max-height:110px;
+    margin-top:10px;
+    max-width:80%;
+}
+
+.liste{
+    margin:10%;
 }
