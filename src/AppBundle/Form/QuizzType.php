@@ -16,13 +16,38 @@ class QuizzType extends AbstractType
     {
         $builder
 	        ->add('id','hidden')
-            ->add('title', 'text', array('label'=> 'Titre du quizz', 'required' => true))
-            ->add('description', 'textarea', array('label'=> 'Description du quizz', 'required' => false))
-            ->add('giftText', 'textarea', array('label'=> 'Description de la récompense', 'required' => false))
-            ->add('giftImg', 'file', array('label'=> 'Image de la récompense', 'required' => false))
-            ->add('dateStart', 'datetime', array('label'=> "Date d'ouverture", 'required' => true))
-            ->add('dateEnd', 'datetime', array('label'=> 'Date de fermeture', 'required' => true))
-	        ->add('valider','submit')
+            ->add('title', 'text', array(
+                'label'=> 'Titre du quizz',
+                'required' => true
+            ))
+            ->add('description', 'textarea', array(
+                'label'=> 'Description du quizz',
+                'required' => false
+            ))
+            ->add('giftText', 'textarea', array(
+                'label'=> 'Description de la récompense',
+                'required' => false
+            ))
+            ->add('giftImg', 'file', array(
+                'label'=> 'Image de la récompense',
+                'required' => false
+            ))
+            ->add('datetimeStart', 'text', array(
+                'label'=> "Date d'ouverture",
+                'required' => true,
+                'attr'=>array(
+                    'class' => 'datetimepicker'
+                ),
+                'mapped' => false
+            ))
+            ->add('datetimeEnd', 'text', array(
+                'label'=> 'Date de fermeture',
+                'required' => true,'attr'=>array(
+                    'class' => 'datetimepicker'
+                ),
+                'mapped' => false
+            ))
+	        ->add('Valider','submit')
         ;
     }
     

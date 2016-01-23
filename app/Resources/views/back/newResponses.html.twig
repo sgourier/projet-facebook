@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h2>{{ question.description }}</h2>
+    <form id="responsesForm">
+        <label for="reponse1">Réponse 1 : </label>
+        <input type="text" id="reponse1" name="reponse1">
+        <div id="" class='uil-spin-css hidden' style='-webkit-transform:scale(0.59)'><div><div></div></div><div><div></div></div><div><div></div></div><div><div></div></div><div><div></div></div><div><div></div></div><div><div></div></div><div><div></div></div></div>
+        <img class="validImg hidden" alt="Enregistré" src="{{ asset('images/validIcon.png') }}">
+    </form>
+{% endblock %}

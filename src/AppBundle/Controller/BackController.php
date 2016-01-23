@@ -110,11 +110,16 @@ class BackController extends Controller
 		$formQuizz->handleRequest( $this->get( 'request' ) );
 		if ( $formQuizz->isValid() )
 		{
+			//var_dump($formQuizz->getData());die;
+			$quizz->setDateStart(new \DateTime($formQuizz['datetimeStart']->getData()));
+			$quizz->setDateEnd(new \DateTime($formQuizz['datetimeEnd']->getData()));
 			$this->getDoctrine()->getManager()->persist($quizz);
 			$this->getDoctrine()->getManager()->flush();
 		}
 
-		return $this->redirect($this->generateUrl("new_question"));
+		return $this->redirect($this->generateUrl("new_question",array(
+			'idQuizz' => $quizz->getId()
+		)));
 	}
 
 	/**
@@ -168,7 +173,7 @@ class BackController extends Controller
 			$this->getDoctrine()->getManager()->flush();
 		}
 
-		return "ok";
+		return $this->render(':back:newResponses.html.twig');
 	}
 
 	/**

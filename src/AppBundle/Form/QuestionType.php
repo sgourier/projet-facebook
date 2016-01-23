@@ -25,6 +25,7 @@ class QuestionType extends AbstractType
                 "class" => "AppBundle:Quizz",
 	            'attr' => array('class'=>'hidden')
 	        ))
+	        ->add('Valider','submit')
         ;
     }
     
