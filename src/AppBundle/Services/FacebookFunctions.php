@@ -7,22 +7,30 @@
  */
 
 namespace AppBundle\Services;
+use Doctrine\Bundle\DoctrineBundle\Registry;
 use Facebook;
+use AppBundle\Entity\Users;
 
 //require_once __DIR__ . '/../facebook-php-sdk/src/Facebook/autoload.php';
 
 class FacebookFunctions
 {
-	function __construct()
-	{
+	private $em;
+	private $appId;
+	private $appSecret;
 
+	function __construct(Registry $doctrine,$appId,$appSecret)
+	{
+		$this->em = $doctrine->getManager();
+		$this->appId = $appId;
+		$this->appSecret = $appSecret;
 	}
 
 	function fbLogger()
 	{
 		return new Facebook\Facebook([
-			'app_id' => '1117392764937981',
-			'app_secret' => '071b3100ebaa4b3d6147474399b2840f',
+			'app_id' => $this->appId,
+			'app_secret' => $this->appSecret,
 			'default_graph_version' => 'v2.5',
 		]);
 	}
@@ -30,7 +38,27 @@ class FacebookFunctions
 	function getFBUser($token)
 	{
 		$fb = $this->fbLogger();
-		$requestUserName = $fb->get('/me?fields=gender,email,birthday,name,first_name',$token);
+		$requestUserName = $fb->get('/me?fields=gender,email,name,birthday,last_name,first_name',$token);
 		return $requestUserName->getGraphUser();
+	}
+
+	function saveUser($token)
+	{
+		$repository = $this->em->getRepository('AppBundle:Users');
+		$fbUser = $this->getFBUser($token);
+		$user = $repository->findOneByIdFacebook($fbUser->getId());
+		if(!is_object($user))
+		{
+			$newUser = new Users;
+			$newUser->setIdFacebook($fbUser->getId());
+			$newUser->setBirthday($fbUser->getBirthday());
+			$newUser->setEmail($fbUser->getEmail());
+			$newUser->setGender($fbUser->getGender());
+			$newUser->setNom($fbUser->getLastName());
+			$newUser->setPrenom($fbUser->getFirstName());
+
+			$this->em->persist($newUser);
+			$this->em->flush();
+		}
 	}
 }

@@ -218,27 +218,4 @@ class Users
     {
         return $this->roles;
     }
-
-    /**
-     * Set idFacebook
-     *
-     * @param string $idFacebook
-     * @return Users
-     */
-    public function setIdFacebook($idFacebook)
-    {
-        $this->idFacebook = $idFacebook;
-
-        return $this;
-    }
-
-    /**
-     * Get idFacebook
-     *
-     * @return string 
-     */
-    public function getIdFacebook()
-    {
-        return $this->idFacebook;
-    }
 }

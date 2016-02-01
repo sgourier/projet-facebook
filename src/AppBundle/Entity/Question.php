@@ -31,14 +31,14 @@ class Question
     /**
      * @var string
      *
-     * @ORM\Column(name="imgPath", type="text")
+     * @ORM\Column(name="imgPath", type="text", nullable=true)
      */
     private $imgPath;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="videoPath", type="text")
+     * @ORM\Column(name="videoPath", type="text", nullable=true)
      */
     private $videoPath;
 
