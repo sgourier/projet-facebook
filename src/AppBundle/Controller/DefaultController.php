@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Facebook;
 
 class DefaultController extends Controller
 {
@@ -18,12 +19,22 @@ class DefaultController extends Controller
 
 		if ($userToken == null) {
 			return $this->redirect($this->generateUrl('login'));
-		} else if ($userToken == 'error') {
+		}
+		else if ($userToken == 'error')
+		{
 			return $this->render('default/index.html.twig', array(
 				'testString' => 'error'
 			));
-		} else {
-			$user = $this->container->get('facebook_service')->getFBUser($userToken);
+		}
+		else
+		{
+			try
+			{
+				$user = $this->container->get('facebook_service')->getFBUser($userToken);
+			}
+			catch(Facebook\Exceptions\FacebookSDKException $e) {
+				return $this->redirect($this->generateUrl('login'));
+			}
 			return $this->render('default/index.html.twig', array(
 				'testString' => $user['name']
 			));

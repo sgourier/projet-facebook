@@ -12,4 +12,46 @@ use Doctrine\ORM\EntityRepository;
  */
 class QuizzRepository extends EntityRepository
 {
+	function verifyDates($dateStart,$dateEnd)
+	{
+		$query = $this->createQueryBuilder('q')
+					  ->select('COUNT(q)');
+
+		$query->where($query->expr()->orX(
+			$query->expr()->andX(
+				$query->expr()->lte('q.dateStart',':dateS'),
+				$query->expr()->gt('q.dateEnd',':dateS')
+			),
+			$query->expr()->andX(
+				$query->expr()->lt('q.dateStart',':dateE'),
+				$query->expr()->gte('q.dateEnd',':dateE')
+			),
+			$query->expr()->andX(
+				$query->expr()->gte('q.dateStart', ':dateS'),
+				$query->expr()->lte('q.dateEnd',':dateE')
+			)
+		))
+		->setParameters(array(
+			'dateS' => $dateStart,
+			'dateE' => $dateEnd
+		));
+
+		return $query->getQuery()->getSingleScalarResult();
+	}
+
+	function getCurrentQuizz()
+	{
+		$now = new \DateTime();
+
+		$query = $this->createQueryBuilder('q');
+		$query->where($query->expr()->andX(
+			$query->expr()->lte('q.dateStart',':now'),
+			$query->expr()->gt('q.dateEnd',':now')
+		))
+			->setParameters(array(
+				'now' => $now
+			));
+
+		return $query->getQuery()->getSingleResult();
+	}
 }

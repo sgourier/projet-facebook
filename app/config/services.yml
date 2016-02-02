@@ -6,6 +6,7 @@ parameters:
 services:
     facebook_service:
         class: AppBundle\Services\FacebookFunctions
+        arguments: [@doctrine,%app_fb_id%,%app_fb_secret%]
 #    service_name:
 #        class: AppBundle\Directory\ClassName
 #        arguments: ["@another_service_name", "plain_value", "%parameter_name%"]

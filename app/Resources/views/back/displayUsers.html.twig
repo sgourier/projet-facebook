@@ -1,0 +1,10 @@
+{% extends 'back/backMenu.html.twig' %}
+
+{% block content %}
+    <h2>Liste des utilisateurs</h2>
+
+    {% for user in users %}
+        {{ user.nom }} | {{ user.prenom }} | {{ user.birthday|date("d/m/Y") }} | {{ user.email }} | {{ user.gender }} <br>
+    {% endfor %}
+{% endblock %}
+
