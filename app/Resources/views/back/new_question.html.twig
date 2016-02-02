@@ -1,7 +1,9 @@
-{% extends 'base.html.twig' %}
+{% extends 'back/backMenu.html.twig' %}
 
-{% block body %}
+{% block content %}
+    <h2>Question n°{{ nbQuestion }}</h2>
     {{ form_start(form) }}
     {{ form_rest(form) }}
     {{ form_end(form) }}
+    <a class="button" href="{{ path('back_menu') }}">Retour au menu</a>
 {% endblock %}

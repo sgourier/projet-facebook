@@ -2,11 +2,15 @@
     font-family: texgy;
     src: url(../font/texgyreadventor-bold.otf);
 }
+html{
+    height:100%;
+}
 body {
-  margin: 0px;
+    margin: 0px;
+    height:100%;
 }
 nav{
-   background-color: #69CBAA;
+    background-color: #69CBAA;
     color:white;
     font-size:50px;
 }
@@ -88,4 +92,54 @@ a {
 .hidden
 {
     display: none;
+}
+
+
+/*NavBar Left Back Office*/
+
+.navBack{
+/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#ffffff+0,f6f6f6+47,ededed+100;White+3D+%231 */
+    background: #ffffff; /* Old browsers */
+    background: -moz-linear-gradient(top,  #ffffff 0%, #f6f6f6 47%, #ededed 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(top,  #ffffff 0%,#f6f6f6 47%,#ededed 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom,  #ffffff 0%,#f6f6f6 47%,#ededed 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#ededed',GradientType=0 ); /* IE6-9 */
+
+    border-right:#69CBAA 2px solid;
+    width: 200px;
+    min-height:100%;
+    position:absolute;
+}
+
+.navBack ul{
+    margin:0px;
+    padding-left:0px;
+}
+
+.navBack ul li{
+    padding:10px;
+    list-style-type: none;
+    border-bottom:#69CBAA 1px solid;
+}
+
+.navBack ul li a{
+    text-decoration: none;
+}
+
+.navBack ul .active{
+    background-color:#69CBAA;
+}
+
+.navBack ul .active a{
+    color:#FFF;
+}
+
+#content{
+    padding-left:200px;
+    margin:10px;
+}
+
+#content form{
+    padding:10px;
+    border:#69CBAA 1px solid;
 }

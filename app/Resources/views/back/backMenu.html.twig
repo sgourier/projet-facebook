@@ -1,7 +1,12 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <a href="{{ path("new_quizz" )}}">Nouveau Quizz</a>
-    <a href="{{ path("old_quizz" )}}">Tout les Quizz</a>
-    <a href="{{ path("user_datas" )}}">Données utilisateurs</a>
+    <div class="navBack">
+        <ul>
+            <li class="active"><a href="{{ path("new_quizz" )}}">Nouveau Quizz</a></li>
+            <li><a href="{{ path("old_quizz" )}}">Tout les Quizz</a></li>
+            <li><a href="{{ path("user_datas" )}}">Données utilisateurs</a></li>
+        </ul>
+    </div>
+    <div id="content">{% block content %}{% endblock %}</div>
 {% endblock %}
