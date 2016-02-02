@@ -4,8 +4,8 @@
 
 $.datetimepicker.setLocale('fr');
 $('.datetimepicker').datetimepicker({
-    format: 'Y-m-d\TH:i',
-    inline: true,
+    format: 'Y-m-d H:i',
+    //inline: true,
     lang: 'fr'
 });
 

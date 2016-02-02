@@ -112,11 +112,24 @@ class BackController extends Controller
 		$formQuizz->handleRequest( $this->get( 'request' ) );
 		if ( $formQuizz->isValid() )
 		{
-			//var_dump($formQuizz->getData());die;
-			$quizz->setDateStart(new \DateTime($formQuizz['datetimeStart']->getData()));
-			$quizz->setDateEnd(new \DateTime($formQuizz['datetimeEnd']->getData()));
-			$this->getDoctrine()->getManager()->persist($quizz);
-			$this->getDoctrine()->getManager()->flush();
+			$repoQuizz = $this->getDoctrine()->getManager()->getRepository('AppBundle:Quizz');
+			$dateStart = new \DateTime($formQuizz['datetimeStart']->getData());
+			$dateEnd = new \DateTime($formQuizz['datetimeEnd']->getData());
+
+			if($repoQuizz->verifyDates($dateStart,$dateEnd) == 0)
+			{
+				$quizz->setDateStart($dateStart);
+				$quizz->setDateEnd($dateEnd);
+				$this->getDoctrine()->getManager()->persist($quizz);
+				$this->getDoctrine()->getManager()->flush();
+			}
+			else
+			{
+				return $this->render('back/quizzForm.html.twig',array(
+					'form' => $formQuizz->createView(),
+					'error' => true
+				));
+			}
 		}
 
 		return $this->redirect($this->generateUrl("new_question",array(
@@ -129,7 +142,11 @@ class BackController extends Controller
 	 */
 	public function displayUserDatasAction()
 	{
+		$users = $this->getDoctrine()->getManager()->getRepository('AppBundle:Users')->findAll();
 
+		return $this->render('back/displayUsers.html.twig',array(
+			'users' => $users
+		));
 	}
 
 	/**
@@ -146,7 +163,8 @@ class BackController extends Controller
 	public function newQuestionAction($idQuizz,$idQuestion)
 	{
 		$question = new Question;
-		$question->setQuizz($this->getDoctrine()->getManager()->getRepository('AppBundle:Quizz')->find($idQuizz));
+		$quizz = $this->getDoctrine()->getManager()->getRepository('AppBundle:Quizz')->find($idQuizz);
+		$question->setQuizz($quizz);
 
 		if($idQuestion !== null)
 		{
@@ -155,7 +173,8 @@ class BackController extends Controller
 		$form = $this->createForm(new QuestionType(), $question,array('action' => $this->generateUrl('save_question')));
 
 		return $this->render(":back:new_question.html.twig", array(
-			"form" => $form->createView()
+			"form" => $form->createView(),
+			'nbQuestion' => count($quizz->getQuestions()) +1
 		));
 	}
 

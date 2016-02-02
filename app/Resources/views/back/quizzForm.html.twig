@@ -1,6 +1,11 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
+    {% if error is defined and error == true %}
+        <div class="error">
+            Attention, un seul quizz peut être actif en même temps, veuillez choisir d'autre dates.
+        </div>
+    {% endif %}
     {{ form_start(form) }}
     {{ form_rest(form) }}
     {{ form_end(form) }}

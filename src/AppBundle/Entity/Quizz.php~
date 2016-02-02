@@ -401,6 +401,29 @@ class Quizz
 	}
 
     /**
+     * Add questions
+     *
+     * @param \AppBundle\Entity\Question $questions
+     * @return Quizz
+     */
+    public function addQuestion(\AppBundle\Entity\Question $questions)
+    {
+        $this->questions[] = $questions;
+
+        return $this;
+    }
+
+    /**
+     * Remove questions
+     *
+     * @param \AppBundle\Entity\Question $questions
+     */
+    public function removeQuestion(\AppBundle\Entity\Question $questions)
+    {
+        $this->questions->removeElement($questions);
+    }
+
+    /**
      * Get questions
      *
      * @return \Doctrine\Common\Collections\Collection 
