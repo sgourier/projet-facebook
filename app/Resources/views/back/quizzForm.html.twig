@@ -6,7 +6,16 @@
             Attention, un seul quizz peut être actif en même temps, veuillez choisir d'autre dates.
         </div>
     {% endif %}
-    {{ form_start(form) }}
-    {{ form_rest(form) }}
-    {{ form_end(form) }}
+    <div class="formBoxBack">
+        <div class="titleBoxBack" align="center">Création d'un quizz</div>
+        {{ form_start(form) }}
+            <div class="input">{{ form_label(form.title) }}<br>{{ form_widget(form.title) }}</div>
+            <div class="input">{{ form_label(form.description) }}<br>{{ form_widget(form.description) }}</div>
+            <div class="input">{{ form_label(form.giftText) }}<br>{{ form_widget(form.giftText) }}</div>
+            <div class="input">{{ form_label(form.giftImg) }}<br>{{ form_widget(form.giftImg) }}</div>
+            <div class="input">{{ form_label(form.datetimeStart) }}<br>{{ form_widget(form.datetimeStart) }}</div>
+            <div class="input">{{ form_label(form.datetimeEnd) }}<br>{{ form_widget(form.datetimeEnd) }}</div>
+            <div class="input"><br>{{ form_widget(form.Valider) }}</div>
+        {{ form_end(form) }}
+    </div>
 {% endblock %}

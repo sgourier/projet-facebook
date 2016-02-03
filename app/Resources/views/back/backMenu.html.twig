@@ -3,9 +3,9 @@
 {% block body %}
     <div class="navBack">
         <ul>
-            <li class="active"><a href="{{ path("new_quizz" )}}">Nouveau Quizz</a></li>
-            <li><a href="{{ path("old_quizz" )}}">Tout les Quizz</a></li>
-            <li><a href="{{ path("user_datas" )}}">Données utilisateurs</a></li>
+            <li class="{% if createQuizz is defined %}active{% endif %}"><a href="{{ path("new_quizz" )}}">Nouveau Quizz</a></li>
+            <li class="{% if displayQuizz is defined %}active{% endif %}"><a href="{{ path("all_quizz" )}}">Tout les Quizz</a></li>
+            <li class="{% if listUser is defined %}active{% endif %}"><a href="{{ path("user_datas" )}}">Données utilisateurs</a></li>
         </ul>
     </div>
     <div id="content">{% block content %}{% endblock %}</div>

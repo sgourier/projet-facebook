@@ -1,9 +1,24 @@
 {% extends 'back/backMenu.html.twig' %}
 
 {% block content %}
-    <h2>Question n°{{ nbQuestion }}</h2>
-    {{ form_start(form) }}
-    {{ form_rest(form) }}
-    {{ form_end(form) }}
+    <div class="formBoxBack">
+        <div class="titleBoxBack" align="center">Question n°{{ nbQuestion }}</div>
+        {{ form_start(form) }}
+        <div class="input">{{ form_label(form.description) }}<br>{{ form_widget(form.description) }}</div>
+        <div class="input">{{ form_label(form.imgPath) }}<br>{{ form_widget(form.imgPath) }}</div>
+        <div class="input">{{ form_label(form.videoPath) }}<br>{{ form_widget(form.videoPath) }}</div>
+        <div class="input">{{ form_widget(form.quizz) }}</div>
+        <div class="spaceBar"></div>
+        <div class="input">{{ form_label(form.response1) }}<br>{{ form_widget(form.response1) }}<br>
+            {{ form_label(form.correct1) }}{{ form_widget(form.correct1) }}</div>
+        <div class="input">{{ form_label(form.response2) }}<br>{{ form_widget(form.response2) }}<br>
+            {{ form_label(form.correct2) }}{{ form_widget(form.correct2) }}</div>
+        <div class="input">{{ form_label(form.response3) }}<br>{{ form_widget(form.response3) }}<br>
+            {{ form_label(form.correct3) }}{{ form_widget(form.correct3) }}</div>
+        <div class="input">{{ form_label(form.response4) }}<br>{{ form_widget(form.response4) }}<br>
+            {{ form_label(form.correct4) }}{{ form_widget(form.correct4) }}</div>
+        <div class="input"><br>{{ form_widget(form.Valider) }}</div>
+        {{ form_end(form) }}
+    </div>
     <a class="button" href="{{ path('back_menu') }}">Retour au menu</a>
 {% endblock %}

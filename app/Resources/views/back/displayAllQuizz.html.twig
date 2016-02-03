@@ -1,0 +1,17 @@
+{% extends 'back/backMenu.html.twig' %}
+
+{% block content %}
+    <h2>Liste des Quizz</h2>
+
+    {% for quizz in quizzs %}
+        <div class="displayQuizz">
+            {{ quizz.title }}
+            {{ quizz.description }}
+            Début le {{ quizz.dateStart|date('d/m/Y') }}
+            Fin le {{ quizz.dateEnd|date('d/m/Y') }}
+            {% if quizz.dateStart > date() %}
+                <a>Détails du quizz</a>
+            {% endif %}
+        </div>
+    {% endfor %}
+{% endblock %}

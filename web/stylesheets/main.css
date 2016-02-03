@@ -135,11 +135,36 @@ a {
 }
 
 #content{
-    padding-left:200px;
+    margin:10px 10px 10px 210px;
+}
+
+/* FormNewQuizz*/
+
+.formBoxBack{
+    border:#69CBAA 1px solid;
+}
+.titleBoxBack{
+    padding:10px 0px;
+    color:white;
+    background-color:#69CBAA;
+    font-size:25px;
+}
+.formBoxBack form input[type="text"], .formBoxBack form textarea{
+    width:100%;
+    max-width:250px;
+    border:#69CBAA 1px solid;
+    border-radius:5px;
+}
+.formBoxBack form textarea{
+    min-height:100px;
+}
+.formBoxBack form .input{
     margin:10px;
 }
 
-#content form{
-    padding:10px;
-    border:#69CBAA 1px solid;
+.spaceBar{
+    margin:20px 0px 20px 5%;
+    width:90%;
+    height:1px;
+    background-color:#69CBAA;
 }

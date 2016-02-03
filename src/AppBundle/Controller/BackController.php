@@ -19,6 +19,11 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use AppBundle\Form\QuestionType;
 use AppBundle\Entity\Question;
 use AppBundle\Entity\Reponse;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Serializer\Encoder\XmlEncoder;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 
 class BackController extends Controller
 {
@@ -95,7 +100,8 @@ class BackController extends Controller
 		$quizzForm = $this->createForm(new QuizzType(),$quizz,array('method'=>'POST', 'action' => $this->generateUrl('save_quizz')));
 
 		return $this->render('back/quizzForm.html.twig',array(
-			'form' => $quizzForm->createView()
+			'form' => $quizzForm->createView(),
+		    'createQuizz' => true
 		));
 	}
 
@@ -127,7 +133,8 @@ class BackController extends Controller
 			{
 				return $this->render('back/quizzForm.html.twig',array(
 					'form' => $formQuizz->createView(),
-					'error' => true
+					'error' => true,
+					'createQuizz' => true
 				));
 			}
 		}
@@ -138,14 +145,26 @@ class BackController extends Controller
 	}
 
 	/**
-	 * @Route("/userDatas", name="user_datas")
+	 * @Route("/userDatas/{offset}/{search}", name="user_datas")
 	 */
-	public function displayUserDatasAction()
+	public function displayUserDatasAction($offset = 0,$search = null)
 	{
-		$users = $this->getDoctrine()->getManager()->getRepository('AppBundle:Users')->findAll();
+		$limit = 50;
+		if($this->get('request')->isMethod('POST'))
+		{
+			$search = $this->get('request')['search'];
+		}
+
+		$users = $this->getDoctrine()->getManager()->getRepository('AppBundle:Users')->getLimitedUsers($offset,$search,$limit);
+		$nbUser = $this->getDoctrine()->getManager()->getRepository('AppBundle:Users')->countAllWithSearch($search);
 
 		return $this->render('back/displayUsers.html.twig',array(
-			'users' => $users
+			'users' => $users,
+			'search' => $search,
+			'offset' => $offset,
+			'nbUser' => $nbUser,
+			'limit' => $limit,
+			'listUser' => true
 		));
 	}
 
@@ -154,7 +173,45 @@ class BackController extends Controller
 	 */
 	public function exportUserDatasAction()
 	{
+		$em = $this->getDoctrine()->getEntityManager();
 
+		$iterableResult = $em->getRepository('AppBundle:Users')->createQueryBuilder('a')->getQuery()->iterate();
+		$handle = fopen('php://memory', 'r+');
+
+		while (false !== ($row = $iterableResult->next())) {
+			fputcsv($handle, array(
+				$row[0]->getNom(),
+				$row[0]->getPrenom(),
+				$row[0]->getEmail(),
+				$row[0]->getBirthday()->format('d/m/Y'),
+				$row[0]->getGender(),
+				$row[0]->getIdFacebook()
+			));
+			$em->detach($row[0]);
+		}
+
+		rewind($handle);
+		$content = stream_get_contents($handle);
+		fclose($handle);
+
+		return new Response($content, 200, array(
+			'Content-Type' => 'application/force-download',
+			'Content-Disposition' => 'attachment; filename="exportUser.csv"'
+		));
+	}
+
+	/**
+	 * @Route("/deleteUser/{id}", name="deleteUser")
+	 */
+	public function deleteUserAction($id)
+	{
+		$user = $this->getDoctrine()->getManager()->getRepository('AppBundle:Users')->find($id);
+
+		$em = $this->getDoctrine()->getManager();
+		$em->remove($user);
+		$em->flush();
+
+		return $this->redirect($this->generateUrl('user_datas'));
 	}
 
 	/**
@@ -174,7 +231,8 @@ class BackController extends Controller
 
 		return $this->render(":back:new_question.html.twig", array(
 			"form" => $form->createView(),
-			'nbQuestion' => count($quizz->getQuestions()) +1
+			'nbQuestion' => count($quizz->getQuestions()) +1,
+			'createQuizz' => true
 		));
 	}
 
@@ -236,33 +294,21 @@ class BackController extends Controller
 	}
 
 	/**
-	 * @Route("/oldQuizz", name="old_quizz")
+	 * @Route("/allQuizz", name="all_quizz")
 	 */
-	public function displayOldQuizzAction()
+	public function displayAllQuizzAction()
 	{
+		$quizzs = $this->getDoctrine()->getManager()->getRepository('AppBundle:Quizz')->findBy(array("active" => 1),array('dateStart'=>'ASC'));
 
+		return $this->render('back/displayAllQuizz.html.twig',array(
+			'quizzs' => $quizzs
+		));
 	}
 
 	/**
 	 * @Route("/quizzRank/{idQuizz}", name="quizz_rank")
 	 */
 	public function displayQuizzRankingAction($idQuizz)
-	{
-
-	}
-
-	/**
-	 * @Route("/newAnswer", name="new_answer")
-	 */
-	public function newAnswer()
-	{
-
-	}
-
-	/**
-	 * @Route("/saveAnswer", name="save_answer")
-	 */
-	public function saveAnswer()
 	{
 
 	}
