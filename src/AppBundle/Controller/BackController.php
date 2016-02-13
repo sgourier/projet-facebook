@@ -28,6 +28,7 @@ use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 class BackController extends Controller
 {
 	/**
+	 * Redirige vers la page d'autorisation facebook
 	 * @Route("/login", name="login")
 	 */
 	public function loginAction()
@@ -44,6 +45,7 @@ class BackController extends Controller
 	}
 
 	/**
+	 * Réceptionne les données d'autorisation FaceBook, enregistre l'utilisateur s'il n'existe pas en BDD
 	 * @Route("/loginCallback", name="login_callback")
 	 */
 	public function loginCallbackAction()
@@ -80,7 +82,10 @@ class BackController extends Controller
 	}
 
 	/**
+	 * Permet d'afficher le meu du back office sur la gauche
 	 * @Route("/backMenu", name="back_menu")
+	 *
+	 * @return object
 	 */
 	public function backMenuAction()
 	{
@@ -88,15 +93,15 @@ class BackController extends Controller
 	}
 
 	/**
-	 * @Route("/newQuizz/{idQuizz]", name="new_quizz", defaults={"idQuizz" = null})
+	 * @Route("/newQuizz", name="new_quizz")
+	 * @param integer $idQuizz id du quizz en cas de modification
+	 *
+	 * @return object
 	 */
-	public function newQuizzAction($idQuizz)
+	public function newQuizzAction()
 	{
 		$quizz = new Quizz();
-		if($idQuizz !== null)
-		{
-			$quizz = $this->getDoctrine()->getManager()->getRepository('AppBundle:Quizz')->find($idQuizz);
-		}
+
 		$quizzForm = $this->createForm(new QuizzType(),$quizz,array('method'=>'POST', 'action' => $this->generateUrl('save_quizz')));
 
 		return $this->render('back/quizzForm.html.twig',array(
@@ -106,12 +111,17 @@ class BackController extends Controller
 	}
 
 	/**
-	 * @Route("/saveQuizz", name="save_quizz")
+	 * @Route("/saveQuizz/{idQuizz}", name="save_quizz", defaults={"idQuizz" = null})
 	 * @Method({"POST"})
 	 */
-	public  function  saveQuizzAction()
+	public  function  saveQuizzAction($idQuizz = null)
 	{
 		$quizz = new Quizz;
+
+		if($idQuizz !== null)
+		{
+			$quizz = $this->getDoctrine()->getManager()->getRepository('AppBundle:Quizz')->find($idQuizz);
+		}
 
 		$formQuizz = $this->createForm(new QuizzType(),$quizz);
 
@@ -302,6 +312,28 @@ class BackController extends Controller
 
 		return $this->render('back/displayAllQuizz.html.twig',array(
 			'quizzs' => $quizzs
+		));
+	}
+
+	/**
+	 * @Route("/quizzDetails/{idQuizz}", name="quizz_details")
+	 */
+	public function detailQuizzAction($idQuizz)
+	{
+		$quizz = $this->getDoctrine()->getManager()->getRepository('AppBundle:Quizz')->find($idQuizz);
+
+		$now = new \DateTime();
+
+		$form = false;
+
+		if($quizz->getDateStart() <= $now && $quizz->getDateEnd() > $now)
+		{
+			$form = $this->createForm(new QuizzType(),$quizz,array('method'=>'post','action'=>$this->generateUrl('save_quizz',array('idQuizz'=>$idQuizz))));
+		}
+
+		return $this->render('back/detailQuizz.html.twig',array(
+			'quizz' => $quizz,
+			'formQuizz' => $form
 		));
 	}
 
