@@ -3,15 +3,36 @@
 {% block content %}
     <h2>Liste des Quizz</h2>
 
-    {% for quizz in quizzs %}
-        <div class="displayQuizz">
-            {{ quizz.title }}
-            {{ quizz.description }}
-            Début le {{ quizz.dateStart|date('d/m/Y') }}
-            Fin le {{ quizz.dateEnd|date('d/m/Y') }}
-            {% if quizz.dateStart > date() %}
-                <a>Détails du quizz</a>
-            {% endif %}
-        </div>
-    {% endfor %}
+    <div class="sliderQuizz">
+        {% for quizz in quizzs %}
+            <div class="oneQuizz">
+                <h3>{{ quizz.title }}</h3>
+                {% if quizz.giftImg is not null %}
+                    <img src="{{ asset(quizz.giftImg) }}" alt="quizzImg" class="allQuizzImg">
+                {% endif %}
+                <div>{{ quizz.description }}</div>
+                <div>Début le {{ quizz.dateStart|date('d/m/Y') }}</div>
+                <div>Fin le {{ quizz.dateEnd|date('d/m/Y') }}</div>
+                {% if quizz.resultats|length > 0 %}<div>Nombre de résultat : {{ quizz.resultats|length }}</div>{% endif %}
+                <div><a href="{{ path('quizz_details',{'idQuizz':quizz.id}) }}">Détails du quizz</a></div>
+                {% if quizz.dateStart > date() %}
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script>
+        $(document).ready(function(){
+            $('.sliderQuizz').slick({
+                infinite: false,
+                slidesToShow: 2,
+                slidesToScroll: 2
+            });
+        });
+    </script>
 {% endblock %}

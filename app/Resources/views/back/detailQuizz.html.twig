@@ -1,0 +1,76 @@
+{% extends 'back/backMenu.html.twig' %}
+
+{% block content %}
+    <h2>{{ quizz.title }}</h2>
+
+    <div class="infoQuizz">
+        {% if formQuizz is not null %}
+            <div class="formBoxBack">
+                <div id="successQuizzSave">
+                    Changements sauvegardés
+                </div>
+                {{ form_start(formQuizz) }}
+                <div class="input">{{ form_label(formQuizz.title) }}<br>{{ form_widget(formQuizz.title) }}</div>
+                <div class="input">{{ form_label(formQuizz.description) }}<br>{{ form_widget(formQuizz.description) }}</div>
+                <div class="input">{{ form_label(formQuizz.giftText) }}<br>{{ form_widget(formQuizz.giftText) }}</div>
+                {% if quizz.giftImg is not null %}
+                    <div class="quizzGiftImg">
+                        Image actuelle :
+                        <img src="{{ asset(quizz.giftImg) }}">
+                    </div>
+                {% endif %}
+                <div class="input">{{ form_label(formQuizz.giftImg) }}<br>{{ form_widget(formQuizz.giftImg) }}</div>
+                <div class="input">{{ form_label(formQuizz.datetimeStart) }}<br>{{ form_widget(formQuizz.datetimeStart) }}</div>
+                <div class="input">{{ form_label(formQuizz.datetimeEnd) }}<br>{{ form_widget(formQuizz.datetimeEnd) }}</div>
+                <div class="input"><br>{{ form_widget(formQuizz.Valider) }}</div>
+                <input type="hidden" name="ajax" value="1">
+                {{ form_end(formQuizz) }}
+            </div>
+        {% else %}
+            {% if quizz.giftImg is not null %}
+                <img src="{{ asset(quizz.giftImg) }}" alt="quizzImg" class="allQuizzImg">
+            {% endif %}
+            <div>{{ quizz.description }}</div>
+            <div>Début le {{ quizz.dateStart|date('d/m/Y') }}</div>
+            <div>Fin le {{ quizz.dateEnd|date('d/m/Y') }}</div>
+            {% if quizz.resultats|length > 0 %}<div>Nombre de résultat : {{ quizz.resultats|length }}</div>{% endif %}
+        {% endif %}
+    </div>
+
+    <div class="quizzAllQuestions">
+        {% for question in quizz.questions %}
+            <div class="questionName">Quesion n°{{ loop.index }}</div>
+            <div class="quizzQuestion">
+                {% if isPassed == false %}
+                    {{ controller('AppBundle:Back:newQuestion',{'idQuizz': quizz.id, 'idQuesion': question.id}) }}
+                {% else %}
+                    <div>{{ question.description }}</div>
+                    {% if question.imgPath is not null %}<div><img src="{{ asset(question.imgPath) }}"></div>{% endif %}
+                    {% if question.videoPath is not null %}<div><video src="{{ question.videoPath }}"></video></div>{% endif %}
+                    <div>
+                        {% for reponse in question.reponses%}
+                            <div>{{ reponse.description }} <span>Valide : {% if reponse.valid == true %}oui{% else %}non{% endif %}</span></div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+        {% else %}
+            Ce Quizz ne contient aucune question
+        {% endfor %}
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script>
+        $(document).ready(function(){
+            $('.sliderQuizz').slick({
+                infinite: false,
+                slidesToShow: 2,
+                slidesToScroll: 2
+            });
+        });
+    </script>
+{% endblock %}

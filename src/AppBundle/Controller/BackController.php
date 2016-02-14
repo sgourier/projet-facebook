@@ -117,20 +117,30 @@ class BackController extends Controller
 	public  function  saveQuizzAction($idQuizz = null)
 	{
 		$quizz = new Quizz;
+		$quizzImg = null;
 
-		if($idQuizz !== null)
+		if($idQuizz != null)
 		{
 			$quizz = $this->getDoctrine()->getManager()->getRepository('AppBundle:Quizz')->find($idQuizz);
+			$quizzImg = $quizz->getGiftImg();
 		}
 
 		$formQuizz = $this->createForm(new QuizzType(),$quizz);
 
-		$formQuizz->handleRequest( $this->get( 'request' ) );
+		$request = $this->get('request');
+		$ajax = $request->get('ajax',null);
+
+		$formQuizz->handleRequest( $request );
 		if ( $formQuizz->isValid() )
 		{
 			$repoQuizz = $this->getDoctrine()->getManager()->getRepository('AppBundle:Quizz');
 			$dateStart = new \DateTime($formQuizz['datetimeStart']->getData());
 			$dateEnd = new \DateTime($formQuizz['datetimeEnd']->getData());
+
+			if($quizzImg != null && $formQuizz->get('giftImg') == null)
+			{
+				$quizz->setGiftText($quizzImg);
+			}
 
 			if($repoQuizz->verifyDates($dateStart,$dateEnd) == 0)
 			{
@@ -139,7 +149,7 @@ class BackController extends Controller
 				$this->getDoctrine()->getManager()->persist($quizz);
 				$this->getDoctrine()->getManager()->flush();
 			}
-			else
+			else if($ajax == null)
 			{
 				return $this->render('back/quizzForm.html.twig',array(
 					'form' => $formQuizz->createView(),
@@ -147,11 +157,22 @@ class BackController extends Controller
 					'createQuizz' => true
 				));
 			}
+			else
+			{
+				return new Response('error');
+			}
 		}
 
-		return $this->redirect($this->generateUrl("new_question",array(
-			'idQuizz' => $quizz->getId()
-		)));
+		if($ajax == false)
+		{
+			return $this->redirect($this->generateUrl("new_question",array(
+				'idQuizz' => $quizz->getId()
+			)));
+		}
+		else
+		{
+			return new Response('ok');
+		}
 	}
 
 	/**
@@ -254,8 +275,11 @@ class BackController extends Controller
 		$question = new Question();
 
 		$formQuestion = $this->createForm(new QuestionType(),$question);
+		$request = $this->get( 'request' );
 
-		$formQuestion->handleRequest( $this->get( 'request' ) );
+		$ajax = $request->get('ajax',null);
+
+		$formQuestion->handleRequest( $request );
 		if ( $formQuestion->isValid() )
 		{
 			$this->getDoctrine()->getManager()->persist($question);
@@ -263,7 +287,14 @@ class BackController extends Controller
 			$this->saveResponses($formQuestion,$question);
 		}
 
-		return $this->redirect($this->generateUrl('new_question',array('idQuizz'=>$question->getQuizz()->getId())));
+		if($ajax == null)
+		{
+			return $this->redirect($this->generateUrl('new_question',array('idQuizz'=>$question->getQuizz()->getId())));
+		}
+		else
+		{
+			return new Response('ok');
+		}
 	}
 
 	private function saveResponses($formQuestion,$question)
@@ -324,16 +355,22 @@ class BackController extends Controller
 
 		$now = new \DateTime();
 
-		$form = false;
+		$form = null;
+		$isPassed = true;
 
-		if($quizz->getDateStart() <= $now && $quizz->getDateEnd() > $now)
+		if($quizz->getDateStart() > $now)
 		{
-			$form = $this->createForm(new QuizzType(),$quizz,array('method'=>'post','action'=>$this->generateUrl('save_quizz',array('idQuizz'=>$idQuizz))));
+			$form = $this->createForm(new QuizzType(),$quizz,array('method'=>'post','action'=>$this->generateUrl('save_quizz',array('idQuizz'=>$idQuizz)),'attr'=>array('class'=>'modifQuizzForm')));
+			$form->get('datetimeStart')->setData($quizz->getDateStart()->format('Y-m-d H:i'));
+			$form->get('datetimeEnd')->setData($quizz->getDateEnd()->format('Y-m-d H:i'));
+			$form = $form->createView();
+			$isPassed = false;
 		}
 
 		return $this->render('back/detailQuizz.html.twig',array(
 			'quizz' => $quizz,
-			'formQuizz' => $form
+			'formQuizz' => $form,
+			'isPassed' => $isPassed
 		));
 	}
 

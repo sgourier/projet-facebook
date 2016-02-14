@@ -92,6 +92,11 @@ class Quizz
 	 */
 	private $questions;
 
+	/**
+	 * @ORM\OneToMany(targetEntity="AppBundle\Entity\Resultat", mappedBy="quizz", cascade={"persist"})
+	 */
+	private $resultats;
+
 	function __construct()
 	{
 		$this->active  = true;
@@ -408,5 +413,61 @@ class Quizz
     public function getQuestions()
     {
         return $this->questions;
+    }
+
+    /**
+     * Add questions
+     *
+     * @param \AppBundle\Entity\Question $questions
+     * @return Quizz
+     */
+    public function addQuestion(\AppBundle\Entity\Question $questions)
+    {
+        $this->questions[] = $questions;
+
+        return $this;
+    }
+
+    /**
+     * Remove questions
+     *
+     * @param \AppBundle\Entity\Question $questions
+     */
+    public function removeQuestion(\AppBundle\Entity\Question $questions)
+    {
+        $this->questions->removeElement($questions);
+    }
+
+    /**
+     * Add resultats
+     *
+     * @param \AppBundle\Entity\Resultat $resultats
+     * @return Quizz
+     */
+    public function addResultat(\AppBundle\Entity\Resultat $resultats)
+    {
+        $this->resultats[] = $resultats;
+
+        return $this;
+    }
+
+    /**
+     * Remove resultats
+     *
+     * @param \AppBundle\Entity\Resultat $resultats
+     */
+    public function removeResultat(\AppBundle\Entity\Resultat $resultats)
+    {
+        $this->resultats->removeElement($resultats);
+    }
+
+    /**
+     * Get resultats
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getResultats()
+    {
+        return $this->resultats;
     }
 }

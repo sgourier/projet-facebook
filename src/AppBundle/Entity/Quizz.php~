@@ -92,6 +92,11 @@ class Quizz
 	 */
 	private $questions;
 
+	/**
+	 * @ORM\OneToMany(targetEntity="AppBundle\Entity\Resultat", mappedBy="quizz", cascade={"persist"})
+	 */
+	private $resultats;
+
 	function __construct()
 	{
 		$this->active  = true;
@@ -399,29 +404,6 @@ class Quizz
 		if(is_dir($this->getUploadRootDir($cover)))
 			rmdir($this->getUploadRootDir($cover));
 	}
-
-    /**
-     * Add questions
-     *
-     * @param \AppBundle\Entity\Question $questions
-     * @return Quizz
-     */
-    public function addQuestion(\AppBundle\Entity\Question $questions)
-    {
-        $this->questions[] = $questions;
-
-        return $this;
-    }
-
-    /**
-     * Remove questions
-     *
-     * @param \AppBundle\Entity\Question $questions
-     */
-    public function removeQuestion(\AppBundle\Entity\Question $questions)
-    {
-        $this->questions->removeElement($questions);
-    }
 
     /**
      * Get questions

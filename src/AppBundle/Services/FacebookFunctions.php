@@ -61,4 +61,10 @@ class FacebookFunctions
 			$this->em->flush();
 		}
 	}
+
+	function isAdmin()
+	{
+		$fb = $this->fbLogger();
+
+	}
 }

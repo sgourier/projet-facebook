@@ -31,14 +31,14 @@ class Question
     /**
      * @var string
      *
-     * @ORM\Column(name="imgPath", type="text")
+     * @ORM\Column(name="imgPath", type="text", nullable=true)
      */
     private $imgPath;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="videoPath", type="text")
+     * @ORM\Column(name="videoPath", type="text", nullable=true)
      */
     private $videoPath;
 
@@ -47,6 +47,11 @@ class Question
 	 * @ORM\JoinColumn(name="idQuizz", nullable=false)
 	 */
 	private $quizz;
+
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Reponse", mappedBy="question", cascade={"persist"})
+     */
+    private $reponses;
 
 
     /**
@@ -126,5 +131,35 @@ class Question
     public function getVideoPath()
     {
         return $this->videoPath;
+    }
+
+    /**
+     * Set quizz
+     *
+     * @param \AppBundle\Entity\Quizz $quizz
+     * @return Question
+     */
+    public function setQuizz(\AppBundle\Entity\Quizz $quizz)
+    {
+        $this->quizz = $quizz;
+
+        return $this;
+    }
+
+    /**
+     * Get quizz
+     *
+     * @return \AppBundle\Entity\Quizz 
+     */
+    public function getQuizz()
+    {
+        return $this->quizz;
+    }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->reponses = new \Doctrine\Common\Collections\ArrayCollection();
     }
 }

@@ -163,8 +163,68 @@ a {
 }
 
 .spaceBar{
-    margin:20px 0px 20px 5%;
+    margin:20px 0 20px 5%;
     width:90%;
     height:1px;
     background-color:#69CBAA;
+}
+
+.allQuizzImg
+{
+    height: 200px;
+    width: 200px;
+}
+
+.sliderQuizz
+{
+    border: 1px solid #69CBAA;
+    width: 95%;
+    margin: 0 auto;
+    border-radius: 5px;
+}
+
+.sliderQuizz .slick-prev
+{
+    background: url("../images/prev-arrow.png");
+    background-size: 20px 20px;
+    content: none;
+}
+
+.sliderQuizz .slick-prev:hover
+{
+    background: url("../images/prev-arrow.png");
+    background-size: 20px 20px;
+    content: none;
+}
+
+.sliderQuizz .slick-next
+{
+    background: url("../images/next-arrow.png");
+    background-size: 20px 20px;
+    content: none;
+}
+
+.sliderQuizz .slick-next:hover
+{
+    background: url("../images/next-arrow.png");
+    background-size: 20px 20px;
+    content: none;
+}
+
+.oneQuizz
+{
+    padding: 15px;
+}
+
+.quizzQuestion
+{
+    display: none;
+}
+
+#successQuizzSave
+{
+    padding: 10px;
+    font-size: 19px;
+    color: green;
+    display: none;
 }
