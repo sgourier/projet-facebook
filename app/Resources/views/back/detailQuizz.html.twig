@@ -1,13 +1,16 @@
 {% extends 'back/backMenu.html.twig' %}
 
 {% block content %}
-    <h2>{{ quizz.title }}</h2>
+    <h2 id="quizzTitle">{{ quizz.title }}</h2>
 
     <div class="infoQuizz">
         {% if formQuizz is not null %}
             <div class="formBoxBack">
                 <div id="successQuizzSave">
                     Changements sauvegardés
+                </div>
+                <div id="errorQuizzSave" class="error hidden">
+                    Attention les information entrées ne sont pas valides. Un seul quizz peut être actif en même temps.
                 </div>
                 {{ form_start(formQuizz) }}
                 <div class="input">{{ form_label(formQuizz.title) }}<br>{{ form_widget(formQuizz.title) }}</div>
@@ -37,12 +40,12 @@
         {% endif %}
     </div>
 
-    <div class="quizzAllQuestions">
+    <div id="quizzAllQuestions" class="quizzAllQuestions">
         {% for question in quizz.questions %}
-            <div class="questionName">Quesion n°{{ loop.index }}</div>
+            <div class="questionName">Question n°{{ loop.index }}</div>
             <div class="quizzQuestion">
                 {% if isPassed == false %}
-                    {{ controller('AppBundle:Back:newQuestion',{'idQuizz': quizz.id, 'idQuesion': question.id}) }}
+                    {{ render(controller('AppBundle:Back:newQuestion',{'idQuizz':quizz.id,'idQuestion':question.id,'ajax':1})) }}
                 {% else %}
                     <div>{{ question.description }}</div>
                     {% if question.imgPath is not null %}<div><img src="{{ asset(question.imgPath) }}"></div>{% endif %}
@@ -55,9 +58,15 @@
                 {% endif %}
             </div>
         {% else %}
-            Ce Quizz ne contient aucune question
+            <div class="noQuestion">Ce Quizz ne contient aucune question</div>
         {% endfor %}
     </div>
+
+    {% if isPassed == false %}
+        <div class="newQuestion">
+            {{ render(controller('AppBundle:Back:newQuestion',{'idQuizz':quizz.id,'ajax':1})) }}
+        </div>
+    {% endif %}
 
 {% endblock %}
 

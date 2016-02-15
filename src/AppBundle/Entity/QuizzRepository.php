@@ -12,10 +12,15 @@ use Doctrine\ORM\EntityRepository;
  */
 class QuizzRepository extends EntityRepository
 {
-	function verifyDates($dateStart,$dateEnd)
+	function verifyDates($dateStart,$dateEnd,$idQuizz = null)
 	{
 		$query = $this->createQueryBuilder('q')
 					  ->select('COUNT(q)');
+
+		$parameters = array(
+			'dateS' => $dateStart,
+			'dateE' => $dateEnd
+		);
 
 		$query->where($query->expr()->orX(
 			$query->expr()->andX(
@@ -30,11 +35,15 @@ class QuizzRepository extends EntityRepository
 				$query->expr()->gte('q.dateStart', ':dateS'),
 				$query->expr()->lte('q.dateEnd',':dateE')
 			)
-		))
-		->setParameters(array(
-			'dateS' => $dateStart,
-			'dateE' => $dateEnd
 		));
+
+		if($idQuizz != null)
+		{
+			$query->andWhere('q.id <> :idQuizz');
+			$parameters['idQuizz'] = $idQuizz;
+		}
+
+		$query->setParameters($parameters);
 
 		return $query->getQuery()->getSingleScalarResult();
 	}

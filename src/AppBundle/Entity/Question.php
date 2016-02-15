@@ -53,6 +53,22 @@ class Question
      */
     private $reponses;
 
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="dateAdd", type="datetime")
+     */
+    private $dateAdd;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->reponses = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->dateAdd = new \DateTime();
+    }
+
 
     /**
      * Get id
@@ -155,13 +171,6 @@ class Question
     {
         return $this->quizz;
     }
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->reponses = new \Doctrine\Common\Collections\ArrayCollection();
-    }
 
     /**
      * Add reponses
@@ -194,5 +203,28 @@ class Question
     public function getReponses()
     {
         return $this->reponses;
+    }
+
+    /**
+     * Set dateAdd
+     *
+     * @param \DateTime $dateAdd
+     * @return Question
+     */
+    public function setDateAdd($dateAdd)
+    {
+        $this->dateAdd = $dateAdd;
+
+        return $this;
+    }
+
+    /**
+     * Get dateAdd
+     *
+     * @return \DateTime 
+     */
+    public function getDateAdd()
+    {
+        return $this->dateAdd;
     }
 }

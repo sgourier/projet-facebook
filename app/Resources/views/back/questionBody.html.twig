@@ -1,0 +1,12 @@
+<div class="questionName">Question n°{{ nbQuestion }}</div>
+<div class="quizzQuestion">
+    <div>{{ question.description }}</div>
+    {% if question.imgPath is not null %}<div><img src="{{ asset(question.imgPath) }}"></div>{% endif %}
+    {% if question.videoPath is not null %}<div><video src="{{ question.videoPath }}"></video></div>{% endif %}
+    <div>
+        {% for reponse in question.reponses%}
+            <div>{{ reponse.description }} <span>Valide : {% if reponse.valid == true %}oui{% else %}non{% endif %}</span></div>
+        {% endfor %}
+    </div>
+</div>
+

@@ -142,7 +142,7 @@ class BackController extends Controller
 				$quizz->setGiftText($quizzImg);
 			}
 
-			if($repoQuizz->verifyDates($dateStart,$dateEnd) == 0)
+			if($repoQuizz->verifyDates($dateStart,$dateEnd,$idQuizz) == 0)
 			{
 				$quizz->setDateStart($dateStart);
 				$quizz->setDateEnd($dateEnd);
@@ -161,6 +161,18 @@ class BackController extends Controller
 			{
 				return new Response('error');
 			}
+		}
+		else if($ajax == null)
+		{
+			return $this->render('back/quizzForm.html.twig',array(
+				'form' => $formQuizz->createView(),
+				'error' => true,
+				'createQuizz' => true
+			));
+		}
+		else
+		{
+			return new Response('error');
 		}
 
 		if($ajax == false)
@@ -246,9 +258,9 @@ class BackController extends Controller
 	}
 
 	/**
-	 * @Route("/newQuestion/{idQuizz}/{idQuestion}", name="new_question", defaults={"idQuestion" = null})
+	 * @Route("/newQuestion/{idQuizz}/{idQuestion}/{ajax}", name="new_question", defaults={"idQuestion" = null})
 	 */
-	public function newQuestionAction($idQuizz,$idQuestion)
+	public function newQuestionAction($idQuizz,$idQuestion = null,$ajax = null)
 	{
 		$question = new Question;
 		$quizz = $this->getDoctrine()->getManager()->getRepository('AppBundle:Quizz')->find($idQuizz);
@@ -258,21 +270,62 @@ class BackController extends Controller
 		{
 			$question = $this->getDoctrine()->getManager()->getRepository('AppBundle:Question')->find($idQuestion);
 		}
-		$form = $this->createForm(new QuestionType(), $question,array('action' => $this->generateUrl('save_question')));
+		$form = $this->createForm(new QuestionType(), $question,array('action' => $this->generateUrl('save_question',array('idQuestion'=>$idQuestion)),'attr'=>array('class'=>'modifQuestionForm')));
 
-		return $this->render(":back:new_question.html.twig", array(
-			"form" => $form->createView(),
-			'nbQuestion' => count($quizz->getQuestions()) +1,
-			'createQuizz' => true
-		));
+		$nbQuestion = count($quizz->getQuestions()) +1;
+
+		if($ajax != null)
+		{
+			if($question->getQuizz() != null)
+			{
+				$form = $this->setFormResponsesValues($form,$question);
+				$nbQuestion = $quizz->getQuestions()->indexOf($question)+1;
+			}
+
+			return $this->render(":back:shortQuestionForm.html.twig", array(
+				"form" => $form->createView(),
+				'nbQuestion' => $nbQuestion,
+				'question' => $question
+			));
+		}
+		else
+		{
+			return $this->render(":back:new_question.html.twig", array(
+				"form" => $form->createView(),
+				'nbQuestion' => $nbQuestion,
+				'createQuizz' => true
+			));
+		}
+	}
+
+	private function setFormResponsesValues($form,$question)
+	{
+		$cptResponse = 1;
+
+		foreach($question->getReponses() as $response)
+		{
+			$form->get('response'.$cptResponse)->setData($response->getDescription());
+			$form->get('correct'.$cptResponse)->setData($response->getValid());
+
+			$cptResponse++;
+		}
+
+		return $form;
 	}
 
 	/**
-	 * @Route("/saveQuestion", name="save_question")
+	 * @Route("/saveQuestion/{idQuestion}", name="save_question", defaults={"idQuestion" = null})
 	 */
-	public function saveQuestionAction()
+	public function saveQuestionAction($idQuestion = null)
 	{
 		$question = new Question();
+		$modif = false;
+
+		if($idQuestion != null)
+		{
+			$question = $this->getDoctrine()->getManager()->getRepository('AppBundle:Question')->find($idQuestion);
+			$modif = true;
+		}
 
 		$formQuestion = $this->createForm(new QuestionType(),$question);
 		$request = $this->get( 'request' );
@@ -284,12 +337,19 @@ class BackController extends Controller
 		{
 			$this->getDoctrine()->getManager()->persist($question);
 			$this->getDoctrine()->getManager()->flush();
-			$this->saveResponses($formQuestion,$question);
+			$this->saveResponses($formQuestion,$question,$modif);
 		}
 
 		if($ajax == null)
 		{
 			return $this->redirect($this->generateUrl('new_question',array('idQuizz'=>$question->getQuizz()->getId())));
+		}
+		else if($modif == false)
+		{
+			return $this->render(':back:questionBody.html.twig',array(
+				'question' => $question,
+				'nbQuestion' => count($question->getQuizz()->getQuestions()) +1
+			));
 		}
 		else
 		{
@@ -297,40 +357,27 @@ class BackController extends Controller
 		}
 	}
 
-	private function saveResponses($formQuestion,$question)
+	private function saveResponses($formQuestion,$question,$modif)
 	{
-		if($formQuestion['response1']->getData() != null)
+		for($cptReponse = 1; $cptReponse < 5; $cptReponse++)
 		{
-			$response1 = new Reponse;
-			$response1->setDescription($formQuestion['response1']->getData());
-			$response1->setValid($formQuestion['correct1']->getData());
-			$response1->setQuestion($question);
-			$this->getDoctrine()->getManager()->persist($response1);
+			if($formQuestion['response'.$cptReponse]->getData() != null)
+			{
+				if($modif)
+				{
+					$response = $this->getDoctrine()->getManager()->getRepository('AppBundle:Reponse')->findBy(array('question'=>$question->getId()),array(),1,$cptReponse-1)[0];
+				}
+				else
+				{
+					$response = new Reponse;
+					$response->setQuestion($question);
+				}
+				$response->setDescription($formQuestion['response'.$cptReponse]->getData());
+				$response->setValid($formQuestion['correct'.$cptReponse]->getData());
+				$this->getDoctrine()->getManager()->persist($response);
+			}
 		}
-		if($formQuestion['response2']->getData() != null)
-		{
-			$response2 = new Reponse;
-			$response2->setDescription($formQuestion['response2']->getData());
-			$response2->setValid($formQuestion['correct2']->getData());
-			$response2->setQuestion($question);
-			$this->getDoctrine()->getManager()->persist($response2);
-		}
-		if($formQuestion['response3']->getData() != null)
-		{
-			$response3 = new Reponse;
-			$response3->setDescription($formQuestion['response3']->getData());
-			$response3->setValid($formQuestion['correct3']->getData());
-			$response3->setQuestion($question);
-			$this->getDoctrine()->getManager()->persist($response3);
-		}
-		if($formQuestion['response4']->getData() != null)
-		{
-			$response4 = new Reponse;
-			$response4->setDescription($formQuestion['response4']->getData());
-			$response4->setValid($formQuestion['correct4']->getData());
-			$response4->setQuestion($question);
-			$this->getDoctrine()->getManager()->persist($response4);
-		}
+
 		$this->getDoctrine()->getManager()->flush();
 	}
 

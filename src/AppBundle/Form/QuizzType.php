@@ -15,7 +15,6 @@ class QuizzType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-	        ->add('id','hidden')
             ->add('title', 'text', array(
                 'label'=> 'Titre du quizz : ',
                 'required' => true
