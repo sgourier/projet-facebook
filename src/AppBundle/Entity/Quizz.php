@@ -388,7 +388,7 @@ class Quizz
 				mkdir( $this->getUploadRootDir() );
 			}
 
-			copy( $this->getTmpUploadRootDir() . $this->giftImg, $this->getFullImagePath( false ) );
+			copy( $this->getTmpUploadRootDir() . $this->giftImg, $this->getFullImagePath( ) );
 			unlink( $this->getTmpUploadRootDir() . $this->giftImg );
 		}
 	}
@@ -398,11 +398,10 @@ class Quizz
 	 */
 	public function removeImage()
 	{
-		$cover = false;
-		if(file_exists($this->getFullImagePath($cover)))
-			unlink($this->getFullImagePath($cover));
-		if(is_dir($this->getUploadRootDir($cover)))
-			rmdir($this->getUploadRootDir($cover));
+		if(file_exists($this->getFullImagePath()))
+			unlink($this->getFullImagePath());
+		if(is_dir($this->getUploadRootDir()))
+			rmdir($this->getUploadRootDir());
 	}
 
     /**

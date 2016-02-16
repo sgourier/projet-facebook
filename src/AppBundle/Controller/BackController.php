@@ -266,17 +266,17 @@ class BackController extends Controller
 		$quizz = $this->getDoctrine()->getManager()->getRepository('AppBundle:Quizz')->find($idQuizz);
 		$question->setQuizz($quizz);
 
-		if($idQuestion !== null)
+		if($idQuestion != null)
 		{
 			$question = $this->getDoctrine()->getManager()->getRepository('AppBundle:Question')->find($idQuestion);
 		}
 		$form = $this->createForm(new QuestionType(), $question,array('action' => $this->generateUrl('save_question',array('idQuestion'=>$idQuestion)),'attr'=>array('class'=>'modifQuestionForm')));
 
-		$nbQuestion = count($quizz->getQuestions()) +1;
+		$nbQuestion = $quizz->getQuestions()->count() +1;
 
 		if($ajax != null)
 		{
-			if($question->getQuizz() != null)
+			if($question->getId() != null)
 			{
 				$form = $this->setFormResponsesValues($form,$question);
 				$nbQuestion = $quizz->getQuestions()->indexOf($question)+1;
@@ -348,7 +348,8 @@ class BackController extends Controller
 		{
 			return $this->render(':back:questionBody.html.twig',array(
 				'question' => $question,
-				'nbQuestion' => count($question->getQuizz()->getQuestions()) +1
+				'nbQuestion' => $question->getQuizz()->getQuestions()->count() +1,
+				'newSaved' => true
 			));
 		}
 		else
@@ -379,6 +380,21 @@ class BackController extends Controller
 		}
 
 		$this->getDoctrine()->getManager()->flush();
+	}
+
+	/**
+	 * @Route("/revomeQuestion/{idQuizz}/{idQuestion}", name="remove_question")
+	 */
+	public function removeQuestionAction($idQuizz,$idQuestion)
+	{
+		$quizz = $this->getDoctrine()->getManager()->getRepository('AppBundle:Quizz')->find($idQuizz);
+		$question = $this->getDoctrine()->getManager()->getRepository('AppBundle:Question')->find($idQuestion);
+
+		$quizz->removeQuestion($question);
+		$this->getDoctrine()->getManager()->persist($quizz);
+		$this->getDoctrine()->getManager()->flush();
+
+		return new Response('ok');
 	}
 
 	/**

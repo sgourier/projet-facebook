@@ -1,7 +1,11 @@
 <div class="formBoxBack">
-    <div id="newQuestionTitle" class="titleBoxBack" align="center">Question n°{% if question.id is not null %}{{ nbQuestion }}{% else %}{{ nbQuestion+1 }}{% endif %}</div>
+    {% if question.id is null %}<div id="newQuestionTitle" class="titleBoxBack {% if newSaved is defined %}questionName{% endif %}" align="center">Question n°{{ nbQuestion }}</div>{% endif %}
     {{ form_start(form) }}
+    <div class="validSuccess hidden">
+        Changements sauvegardés
+    </div>
     <div class="input">{{ form_label(form.description) }}<br>{{ form_widget(form.description) }}</div>
+    {% if question.imgPath is not null %}<div><img src="{{ asset(question.getWebPath) }}"></div>{% endif %}
     <div class="input">{{ form_label(form.imgPath) }}<br>{{ form_widget(form.imgPath) }}</div>
     <div class="input">{{ form_label(form.videoPath) }}<br>{{ form_widget(form.videoPath) }}</div>
     <div class="input">{{ form_widget(form.quizz) }}</div>

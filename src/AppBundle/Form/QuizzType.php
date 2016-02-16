@@ -29,7 +29,8 @@ class QuizzType extends AbstractType
             ))
             ->add('giftImg', 'file', array(
                 'label'=> 'Image de la récompense : ',
-                'required' => false
+                'required' => false,
+                'data_class' => null
             ))
             ->add('datetimeStart', 'text', array(
                 'label'=> "Date d'ouverture : ",

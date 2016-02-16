@@ -17,7 +17,7 @@ class QuestionType extends AbstractType
     {
         $builder
             ->add('description','textarea',array('label'=>'Énoncé de la question','required' => true))
-            ->add('imgPath','file',array('label'=>'Image illustrant la question','required'=>false))
+            ->add('imgPath','file',array('label'=>'Image illustrant la question','required'=>false,"data_class"=>null))
             ->add('videoPath','text',array('label'=>"Vidéo illustrant la question (url)",'required' => false))
 	        ->add('quizz','entity',array(
 		        'label' =>false,
