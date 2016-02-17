@@ -38,7 +38,7 @@ class BackController extends Controller
 		$fb = $fbServ->fbLogger();
 
 		$helper = $fb->getRedirectLoginHelper();
-		$permissions = 'email,user_birthday';
+		$permissions = ['email','user_birthday'];
 		$loginUrl = $helper->getLoginUrl($this->generateUrl('login_callback',array(),UrlGeneratorInterface::ABSOLUTE_URL), $permissions);
 
 		return $this->redirect($loginUrl);
