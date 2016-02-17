@@ -56,10 +56,24 @@ class FacebookFunctions
 			$newUser->setGender($fbUser->getGender());
 			$newUser->setNom($fbUser->getLastName());
 			$newUser->setPrenom($fbUser->getFirstName());
+			$newUser->setToken($token);
 
 			$this->em->persist($newUser);
 			$this->em->flush();
 		}
+		else
+		{
+			$user->setToken($token);
+			$this->em->persist($user);
+			$this->em->flush();
+		}
+	}
+
+	function sendNotification($idUser,$template,$ref,$href)
+	{
+		$fbLogger = $this->fbLogger();
+
+		$fbLogger->get('/me/notifications?template='.$template.'&amp;href='.$href.'&amp;ref='.$ref);
 	}
 
 	function isAdmin()

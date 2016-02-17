@@ -38,7 +38,7 @@ class BackController extends Controller
 		$fb = $fbServ->fbLogger();
 
 		$helper = $fb->getRedirectLoginHelper();
-		$permissions = ['email','user_birthday'];
+		$permissions = 'email,user_birthday';
 		$loginUrl = $helper->getLoginUrl($this->generateUrl('login_callback',array(),UrlGeneratorInterface::ABSOLUTE_URL), $permissions);
 
 		return $this->redirect($loginUrl);
@@ -137,9 +137,9 @@ class BackController extends Controller
 			$dateStart = new \DateTime($formQuizz['datetimeStart']->getData());
 			$dateEnd = new \DateTime($formQuizz['datetimeEnd']->getData());
 
-			if($quizzImg != null && $formQuizz->get('giftImg') == null)
+			if($quizz->getGiftImg() == null && $request->get('deleteImg',null) == 0)
 			{
-				$quizz->setGiftText($quizzImg);
+				$quizz->setGiftImg($quizzImg);
 			}
 
 			if($repoQuizz->verifyDates($dateStart,$dateEnd,$idQuizz) == 0)
@@ -320,10 +320,12 @@ class BackController extends Controller
 	{
 		$question = new Question();
 		$modif = false;
+		$imgPath = null;
 
 		if($idQuestion != null)
 		{
 			$question = $this->getDoctrine()->getManager()->getRepository('AppBundle:Question')->find($idQuestion);
+			$imgPath = $question->getImgPath();
 			$modif = true;
 		}
 
@@ -335,6 +337,10 @@ class BackController extends Controller
 		$formQuestion->handleRequest( $request );
 		if ( $formQuestion->isValid() )
 		{
+			if($question->getImgPath() == null && $request->get('deleteImg',null) == 0)
+			{
+				$question->setImgPath($imgPath);
+			}
 			$this->getDoctrine()->getManager()->persist($question);
 			$this->getDoctrine()->getManager()->flush();
 			$this->saveResponses($formQuestion,$question,$modif);
@@ -346,10 +352,11 @@ class BackController extends Controller
 		}
 		else if($modif == false)
 		{
-			return $this->render(':back:questionBody.html.twig',array(
-				'question' => $question,
-				'nbQuestion' => $question->getQuizz()->getQuestions()->count() +1,
-				'newSaved' => true
+			return $this->redirect($this->generateUrl('new_question',array(
+				'idQuizz'=> $question->getQuizz()->getId(),
+				'idQuestion' => $question->getId(),
+				'ajax' => 1
+				)
 			));
 		}
 		else
@@ -443,5 +450,87 @@ class BackController extends Controller
 	public function displayQuizzRankingAction($idQuizz)
 	{
 
+	}
+
+	/**
+	 * @Route("/checkNewQuizzNotif", name="check_new_quizz_notif")
+	 */
+	public function checkNewQuizzNotifAction()
+	{
+		$template = "Un nouveau quizz est disponible, venez participer !";
+		$ref = "newQuizz";
+		$href = $this->generateUrl('homepage');
+
+		$quizzList = $this->getDoctrine()->getManager()->getRepository('AppBundle:Quizz')->findBy(array('active'=>1,'startNotified'=>0));
+		$now = new \DateTime();
+		$fbServ = $this->get('facebook_service');
+
+		foreach($quizzList as $quizz)
+		{
+			if($quizz->getDateStart() < $now)
+			{
+				$users = $this->getDoctrine()->getManager()->getRepository('AppBundle:Users')->findAll();
+				foreach($users as $user)
+				{
+					$fbServ->sendNotification($user->getId(),$template,$ref,$href);
+				}
+			}
+		}
+	}
+
+	/**
+	 * @Route("/checkCloseQuizzNotif", name="check_close_quizz_notif")
+	 */
+	public function checkCloseQuizzNotifAction()
+	{
+		$template = "Le quizz auquel vous avez participé est maintenant fini, venez consulter votre résultat !";
+		$ref = "closedQuizz";
+		$href = $this->generateUrl('resultPage');
+
+		$quizzList = $this->getDoctrine()->getManager()->getRepository('AppBundle:Quizz')->findBy(array('active'=>1,'endNotified'=>0));
+		$now = new \DateTime();
+		$fbServ = $this->get('facebook_service');
+
+		foreach($quizzList as $quizz)
+		{
+			if($quizz->getDateEnd() < $now)
+			{
+				$users = $this->getDoctrine()->getManager()->getRepository('AppBundle:Users')->findAll();
+				foreach($users as $user)
+				{
+					$results = $user->getResults();
+					foreach($results as $result)
+					{
+						if($result->getQuizz()->getId() == $quizz->getId())
+						{
+							$fbServ->sendNotification($user->getId(),$template,$ref,$href);
+						}
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * @Route("/checkBirthdayNotif", name="check_close_quizz_notif")
+	 */
+	public function checkBirthdayNotifAction()
+	{
+		$template = "Joyeux anniversaire ! En guise de cadeau vous avez le droit à un nouvel essai sur le Quizz en cours !";
+		$ref = "birthday";
+		$href = $this->generateUrl('homepage');
+
+		$now = new \DateTime();
+		$fbServ = $this->get('facebook_service');
+
+		$users = $this->getDoctrine()->getManager()->getRepository('AppBundle:Users')->findAll();
+
+		foreach($users as $user)
+		{
+			if($user->getBirthday() != null && $user->getBirthday()->format('Y-m-d') == $now->format('Y-m-d'))
+			{
+				$fbServ->sendNotification($user->getId(),$template,$ref,$href);
+			}
+		}
 	}
 }

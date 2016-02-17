@@ -88,6 +88,20 @@ class Quizz
     private $active;
 
 	/**
+	 * @var boolean
+	 *
+	 * @ORM\Column(name="startNotified", type="boolean")
+	 */
+	private $startNotified;
+
+	/**
+	 * @var boolean
+	 *
+	 * @ORM\Column(name="endNotified", type="boolean")
+	 */
+	private $endNotified;
+
+	/**
 	 * @ORM\OneToMany(targetEntity="AppBundle\Entity\Question", mappedBy="quizz", cascade={"persist"})
 	 */
 	private $questions;
@@ -388,7 +402,7 @@ class Quizz
 				mkdir( $this->getUploadRootDir() );
 			}
 
-			copy( $this->getTmpUploadRootDir() . $this->giftImg, $this->getFullImagePath( false ) );
+			copy( $this->getTmpUploadRootDir() . $this->giftImg, $this->getFullImagePath( ) );
 			unlink( $this->getTmpUploadRootDir() . $this->giftImg );
 		}
 	}
@@ -398,11 +412,10 @@ class Quizz
 	 */
 	public function removeImage()
 	{
-		$cover = false;
-		if(file_exists($this->getFullImagePath($cover)))
-			unlink($this->getFullImagePath($cover));
-		if(is_dir($this->getUploadRootDir($cover)))
-			rmdir($this->getUploadRootDir($cover));
+		if(file_exists($this->getFullImagePath()))
+			unlink($this->getFullImagePath());
+		if(is_dir($this->getUploadRootDir()))
+			rmdir($this->getUploadRootDir());
 	}
 
     /**
@@ -413,5 +426,61 @@ class Quizz
     public function getQuestions()
     {
         return $this->questions;
+    }
+
+    /**
+     * Add questions
+     *
+     * @param \AppBundle\Entity\Question $questions
+     * @return Quizz
+     */
+    public function addQuestion(\AppBundle\Entity\Question $questions)
+    {
+        $this->questions[] = $questions;
+
+        return $this;
+    }
+
+    /**
+     * Remove questions
+     *
+     * @param \AppBundle\Entity\Question $questions
+     */
+    public function removeQuestion(\AppBundle\Entity\Question $questions)
+    {
+        $this->questions->removeElement($questions);
+    }
+
+    /**
+     * Add resultats
+     *
+     * @param \AppBundle\Entity\Resultat $resultats
+     * @return Quizz
+     */
+    public function addResultat(\AppBundle\Entity\Resultat $resultats)
+    {
+        $this->resultats[] = $resultats;
+
+        return $this;
+    }
+
+    /**
+     * Remove resultats
+     *
+     * @param \AppBundle\Entity\Resultat $resultats
+     */
+    public function removeResultat(\AppBundle\Entity\Resultat $resultats)
+    {
+        $this->resultats->removeElement($resultats);
+    }
+
+    /**
+     * Get resultats
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getResultats()
+    {
+        return $this->resultats;
     }
 }

@@ -8,7 +8,7 @@
             <div class="oneQuizz">
                 <h3>{{ quizz.title }}</h3>
                 {% if quizz.giftImg is not null %}
-                    <img src="{{ asset(quizz.giftImg) }}" alt="quizzImg" class="allQuizzImg">
+                    <img src="{{ asset(quizz.getWebPath) }}" alt="quizzImg" class="allQuizzImg">
                 {% endif %}
                 <div>{{ quizz.description }}</div>
                 <div>Début le {{ quizz.dateStart|date('d/m/Y') }}</div>

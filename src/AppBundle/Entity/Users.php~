@@ -70,6 +70,18 @@ class Users
 	 */
 	private $idFacebook;
 
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Resultat", mappedBy="user", cascade={"persist"})
+     */
+    private $results;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="token", type="text", length=1000)
+     */
+    private $token;
+
 
     /**
      * Get id
@@ -217,5 +229,68 @@ class Users
     public function getRoles()
     {
         return $this->roles;
+    }
+
+    /**
+     * Set idFacebook
+     *
+     * @param string $idFacebook
+     * @return Users
+     */
+    public function setIdFacebook($idFacebook)
+    {
+        $this->idFacebook = $idFacebook;
+
+        return $this;
+    }
+
+    /**
+     * Get idFacebook
+     *
+     * @return string 
+     */
+    public function getIdFacebook()
+    {
+        return $this->idFacebook;
+    }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->results = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add results
+     *
+     * @param \AppBundle\Entity\Resultat $results
+     * @return Users
+     */
+    public function addResult(\AppBundle\Entity\Resultat $results)
+    {
+        $this->results[] = $results;
+
+        return $this;
+    }
+
+    /**
+     * Remove results
+     *
+     * @param \AppBundle\Entity\Resultat $results
+     */
+    public function removeResult(\AppBundle\Entity\Resultat $results)
+    {
+        $this->results->removeElement($results);
+    }
+
+    /**
+     * Get results
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getResults()
+    {
+        return $this->results;
     }
 }

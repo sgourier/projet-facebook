@@ -88,6 +88,20 @@ class Quizz
     private $active;
 
 	/**
+	 * @var boolean
+	 *
+	 * @ORM\Column(name="startNotified", type="boolean")
+	 */
+	private $startNotified;
+
+	/**
+	 * @var boolean
+	 *
+	 * @ORM\Column(name="endNotified", type="boolean")
+	 */
+	private $endNotified;
+
+	/**
 	 * @ORM\OneToMany(targetEntity="AppBundle\Entity\Question", mappedBy="quizz", cascade={"persist"})
 	 */
 	private $questions;
@@ -468,5 +482,51 @@ class Quizz
     public function getResultats()
     {
         return $this->resultats;
+    }
+
+    /**
+     * Set startNotified
+     *
+     * @param boolean $startNotified
+     * @return Quizz
+     */
+    public function setStartNotified($startNotified)
+    {
+        $this->startNotified = $startNotified;
+
+        return $this;
+    }
+
+    /**
+     * Get startNotified
+     *
+     * @return boolean 
+     */
+    public function getStartNotified()
+    {
+        return $this->startNotified;
+    }
+
+    /**
+     * Set endNotified
+     *
+     * @param boolean $endNotified
+     * @return Quizz
+     */
+    public function setEndNotified($endNotified)
+    {
+        $this->endNotified = $endNotified;
+
+        return $this;
+    }
+
+    /**
+     * Get endNotified
+     *
+     * @return boolean 
+     */
+    public function getEndNotified()
+    {
+        return $this->endNotified;
     }
 }

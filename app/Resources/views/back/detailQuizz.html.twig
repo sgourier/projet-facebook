@@ -20,6 +20,7 @@
                     <div class="quizzGiftImg">
                         Image actuelle :
                         <img src="{{ asset(quizz.getWebPath) }}">
+                        <div class="button" onclick="setDeleteImage($(this));">Supprimer l'image</div>
                     </div>
                 {% endif %}
                 <div class="input">{{ form_label(formQuizz.giftImg) }}<br>{{ form_widget(formQuizz.giftImg) }}</div>
@@ -27,6 +28,7 @@
                 <div class="input">{{ form_label(formQuizz.datetimeEnd) }}<br>{{ form_widget(formQuizz.datetimeEnd) }}</div>
                 <div class="input"><br>{{ form_widget(formQuizz.Valider) }}</div>
                 <input type="hidden" name="ajax" value="1">
+                <input type="hidden" value="0" name="deleteImg" id="deleteImg">
                 {{ form_end(formQuizz) }}
             </div>
         {% else %}
@@ -42,8 +44,6 @@
 
     <div id="quizzAllQuestions" class="quizzAllQuestions">
         {% for question in quizz.questions %}
-            <div id="newQuestionTitle" class="titleBoxBack questionName" align="center">Question n°{{ loop.index }}</div>
-            <div class="quizzQuestion">
                 {% if isPassed == false %}
                     {{ render(controller('AppBundle:Back:newQuestion',{'idQuizz':quizz.id,'idQuestion':question.id,'ajax':1})) }}
                 {% else %}
@@ -56,7 +56,6 @@
                         {% endfor %}
                     </div>
                 {% endif %}
-            </div>
         {% else %}
             <div class="noQuestion">Ce Quizz ne contient aucune question</div>
         {% endfor %}
