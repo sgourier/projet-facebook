@@ -103,11 +103,13 @@ class Quizz
 
 	/**
 	 * @ORM\OneToMany(targetEntity="AppBundle\Entity\Question", mappedBy="quizz", cascade={"persist"})
+	 * @ORM\OrderBy({"dateAdd" = "ASC"})
 	 */
 	private $questions;
 
 	/**
 	 * @ORM\OneToMany(targetEntity="AppBundle\Entity\Resultat", mappedBy="quizz", cascade={"persist"})
+	 * @ORM\OrderBy({"score" = "DESC","responseTime" = "ASC"})
 	 */
 	private $resultats;
 

@@ -33,7 +33,7 @@ class QuestionType extends AbstractType
 	        ->add('correct3','checkbox',array('required'=>false,'label'=>'Réponse correcte ','mapped' => false))
 	        ->add('response4','text',array('required'=>false,'label'=>'Réponse 4','mapped' => false))
 	        ->add('correct4','checkbox',array('required'=>false,'label'=>'Réponse correcte ','mapped' => false))
-	        ->add('Valider','submit')
+	        ->add('Valider','submit',array("attr"=>array("class"=>"button")))
         ;
     }
     

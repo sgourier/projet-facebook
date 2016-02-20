@@ -1,4 +1,4 @@
-<div id="newQuestionTitle" class="titleBoxBack questionName" align="center">Question n°{{ nbQuestion }}</div>
+<div id="newQuestionTitle" class="titleBoxBack questionName">Question n°{{ nbQuestion }}</div>
 <div class="quizzQuestion">
     <div>{{ question.description }}</div>
     {% if question.imgPath is not null %}<div><img src="{{ asset(question.getWebPath) }}"></div>{% endif %}

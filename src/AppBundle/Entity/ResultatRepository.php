@@ -12,4 +12,22 @@ use Doctrine\ORM\EntityRepository;
  */
 class ResultatRepository extends EntityRepository
 {
+	function getClassement($quizz,$offset = null,$limit = null)
+	{
+		$query = $this->createQueryBuilder('r');
+		$query->where('r.quizz = :quizz')
+			->orderBy('r.score','DESC')
+			->addOrderBy(
+				$query->expr()->diff('r.timeStart','r.responseTime'),'ASC'
+			)
+			->setParameter(':quizz',$quizz);
+
+		if($offset != null && $limit != null)
+		{
+			$query->setFirstResult($offset);
+			$query->setMaxResults($limit);
+		}
+
+		return $query->getQuery()->getResult();
+	}
 }

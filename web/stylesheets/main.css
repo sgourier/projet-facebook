@@ -13,6 +13,7 @@ nav{
     background-color: #69CBAA;
     color:white;
     font-size:50px;
+    text-align: center;
 }
 
 a {
@@ -37,19 +38,19 @@ a {
     float:left;
     left:5%;
     min-width:50%;
-    max-width:50%;
-    min-height:80%;
-    max-height:80%;
+    min-height:715px;
+    text-align: center;
+    margin-bottom: 25px;
+    padding-bottom: 25px;
 }
 
 .cadre2{
     float:left;
     left:65%;
     min-width:30%;
-    max-width:30%;
-    min-height:80%;
-    max-height:80%;
-}
+    min-height:715px;
+    margin-bottom: 25px;
+    padding-bottom: 25px;}
 
 .cadre2 li{
     list-style-type: none;
@@ -57,32 +58,20 @@ a {
 
 .title{
     font-size:40px;
-    min-height:60px;
-    max-height:60px;
-    max-width:80%;
 }
 
 .description{
     font-size:20px;
-    min-height:110px;
-    max-height:110px;
     margin-top:10px;
-    max-width:80%;
 }
 
 .img_lot{
-    min-height:100px;
-    max-height:110px;
     margin-top:10px;
-    max-width:80%;
 }
 
 .lot{
     font-size:20px;
-    min-height:120px;
-    max-height:110px;
     margin-top:10px;
-    max-width:80%;
 }
 
 .liste{
@@ -107,7 +96,6 @@ a {
 
     border-right:#69CBAA 2px solid;
     width: 200px;
-    min-height:100%;
     position:absolute;
 }
 
@@ -142,24 +130,33 @@ a {
 
 .formBoxBack{
     border:#69CBAA 1px solid;
+    padding: 10px;
 }
 .titleBoxBack{
     padding:10px 0px;
     color:white;
     background-color:#69CBAA;
     font-size:25px;
+    text-align: center;
 }
 .formBoxBack form input[type="text"], .formBoxBack form textarea{
     width:100%;
     max-width:250px;
     border:#69CBAA 1px solid;
     border-radius:5px;
+    padding: 5px;
 }
 .formBoxBack form textarea{
     min-height:100px;
 }
 .formBoxBack form .input{
-    margin:10px;
+    margin-bottom:10px;
+}
+
+.formBoxBack img
+{
+    border: 1px solid #69CBAA;
+    border-radius: 10px;
 }
 
 .spaceBar{
@@ -216,6 +213,32 @@ a {
     padding: 15px;
 }
 
+.oneQuizz h3
+{
+    text-align: center;
+}
+
+.oneQuizz img
+{
+    margin: 0 auto;
+    margin-bottom: 15px;
+}
+
+.oneQuizz .quizzDatas
+{
+    margin: 0 auto;
+}
+
+.quizzLink
+{
+    float: right;
+}
+
+.bold
+{
+    font-weight: bold;
+}
+
 .quizzQuestion
 {
     display: none;
@@ -227,4 +250,167 @@ a {
     font-size: 19px;
     color: green;
     display: none;
+}
+
+.errorQuizzSave
+{
+    padding: 10px;
+    font-size: 19px;
+    color: red;
+    display: none;
+}
+
+.validSuccess
+{
+    padding: 10px;
+    font-size: 19px;
+    color: green;
+    display: none;
+}
+
+.fixed
+{
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+.button
+{
+    padding: 15px;
+    background: #e2e2e2;
+    border: 1px solid #69CBAA;
+    color: #69CBAA;
+    border-radius:5px;
+    display: inline-block;
+    margin-bottom: 10px;
+    text-decoration: none;
+}
+
+.button:hover
+{
+    background: #ededed;
+    border: 1px solid #72ddb9;
+    cursor: pointer;
+}
+
+h2
+{
+    color: #69CBAA;
+    font-size: 35px;
+    font-family: "texgy";
+}
+
+h3
+{
+    color: #69CBAA;
+    font-size: 25px;
+    font-family: "texgy";
+}
+
+
+.userRow
+{
+    border-top: #69CBAA 1px solid;
+    display: block;
+    float: none;
+    clear: both;
+}
+
+.userCell
+{
+    padding: 10px;
+    float: left;
+    width:200px;
+}
+
+.searchUserForm
+{
+    margin-bottom: 15px;
+}
+
+.userRowHeader
+{
+    color: #69CBAA;
+    font-size: 22px;
+    font-family: "texgy";
+}
+
+.userCell
+{
+    text-align: center;
+}
+
+.userOptions
+{
+    display: block;
+    float: none;
+    clear: both;
+    text-align: center;
+    padding-bottom: 100px;
+    padding-top: 50px;
+}
+
+.userOptions a
+{
+    text-decoration: none;
+    font-size: 25px;
+}
+
+.userOptions a:hover
+{
+    text-decoration: underline;
+}
+
+.infoQuizz h3
+{
+    margin:5px 0 10px 20px;
+}
+
+.questionContent
+{
+    display: none;
+    padding-top: 25px;
+}
+
+.questionTitle
+{
+    font-weight: bold;
+    color: #484848;
+    font-size: 20px;
+    font-family: "texgy";
+}
+
+.responseDiv
+{
+    margin-bottom: 10px;
+    font-size: 18px;
+}
+
+.responseDiv div
+{
+    margin-left: 30px;
+}
+
+.noCurrentQuizz
+{
+    margin-top: 50px;
+    font-size: 30px;
+}
+
+.buttonParticipate
+{
+    padding: 15px 25px;
+    background: #69CBAA;
+    border-radius: 15px;
+    display: inline-block;
+    color: #FFF;
+    font-size: 35px;
+    margin-top: 15px;
+}
+
+.buttonParticipate:hover
+{
+    cursor: pointer;
+    background: #72ddb9;
 }

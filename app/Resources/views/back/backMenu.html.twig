@@ -10,3 +10,10 @@
     </div>
     <div id="content">{% block content %}{% endblock %}</div>
 {% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('javascript/slick/slick.min.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('javascript/createQuizz.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('javascript/detailQuizz.js') }}" type="text/javascript"></script>
+{% endblock %}

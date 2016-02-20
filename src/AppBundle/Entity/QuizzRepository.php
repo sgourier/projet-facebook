@@ -45,7 +45,7 @@ class QuizzRepository extends EntityRepository
 
 		$query->setParameters($parameters);
 
-		return $query->getQuery()->getSingleScalarResult();
+		return $query->getQuery()->getOneOrNullResult();
 	}
 
 	function getCurrentQuizz()
@@ -61,6 +61,22 @@ class QuizzRepository extends EntityRepository
 				'now' => $now
 			));
 
-		return $query->getQuery()->getSingleResult();
+		return $query->getQuery()->getOneOrNullResult();
+	}
+
+	function getLastQuizz()
+	{
+		$now = new \DateTime();
+
+		$query = $this->createQueryBuilder('q');
+		$query->where(
+				$query->expr()->lt('q.dateEnd',':now')
+			)
+			->andWhere('q.active = 1')
+		    ->setParameters(array(
+			   'now' => $now
+	    ));
+
+		return $query->getQuery()->getOneOrNullResult();
 	}
 }

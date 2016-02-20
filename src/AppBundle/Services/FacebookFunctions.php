@@ -38,7 +38,7 @@ class FacebookFunctions
 	function getFBUser($token)
 	{
 		$fb = $this->fbLogger();
-		$requestUserName = $fb->get('/me?fields=gender,email,name,birthday,last_name,first_name',$token);
+		$requestUserName = $fb->get('/me?fields=gender,email,name,last_name,first_name,age_range',$token);
 		return $requestUserName->getGraphUser();
 	}
 
@@ -51,7 +51,7 @@ class FacebookFunctions
 		{
 			$newUser = new Users;
 			$newUser->setIdFacebook($fbUser->getId());
-			$newUser->setBirthday($fbUser->getBirthday());
+			$newUser->setBirthday($fbUser->getField('age_range')['min']);
 			$newUser->setEmail($fbUser->getEmail());
 			$newUser->setGender($fbUser->getGender());
 			$newUser->setNom($fbUser->getLastName());
@@ -69,16 +69,28 @@ class FacebookFunctions
 		}
 	}
 
-	function sendNotification($idUser,$template,$ref,$href)
+	function sendNotification($idUser,$template,$ref,$href,$userToken)
 	{
 		$fbLogger = $this->fbLogger();
 
-		$fbLogger->get('/me/notifications?template='.$template.'&amp;href='.$href.'&amp;ref='.$ref);
+		if($userToken != null && $userToken != "")
+		{
+			try
+			{
+				$fbLogger->get('/'.$idUser.'/notifications?template='.$template.'&amp;href='.$href.'&amp;ref='.$ref,$userToken);
+				return true;
+			}
+			catch(Facebook\Exceptions\FacebookResponseException $e)
+			{
+				return false;
+			}
+		}
+
+		return false;
 	}
 
 	function isAdmin()
 	{
 		$fb = $this->fbLogger();
-
 	}
 }

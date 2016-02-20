@@ -1,18 +1,20 @@
 {% if question.id is not null %}
-    <div class="titleBoxBack questionName" align="center">Question n°{{ nbQuestion }}</div>
+    <div class="titleBoxBack questionName">Question n°{{ nbQuestion }}</div>
     <div class="quizzQuestion">
 {% endif %}
-    <div class="formBoxBack">
-        {% if question.id is null %}<div id="newQuestionTitle" class="titleBoxBack {% if newSaved is defined %}questionName{% endif %}" align="center">Question n°{{ nbQuestion }}</div>{% endif %}
+        {% if question.id is null %}<div id="newQuestionTitle" class="titleBoxBack {% if newSaved is defined %}questionName{% endif %}">Question n°{{ nbQuestion }}</div>{% endif %}
+        <div class="formBoxBack">
         {{ form_start(form) }}
-        <div class="validSuccess hidden">
+        <div class="validSuccess">
             Changements sauvegardés
         </div>
         <div class="input">{{ form_label(form.description) }}<br>{{ form_widget(form.description) }}</div>
         {% if question.imgPath is not null %}
-            <div>
-                <img src="{{ asset(question.getWebPath) }}">
-                <div class="button" onclick="setDeleteImage($(this));">Supprimer l'image</div>
+            <a>
+                <img src="{{ asset(question.getWebPath) }}" alt="Lot gagnant">
+                <div>
+                    <a class="button" onclick="setDeleteImage($(this));">Supprimer l'image</a>
+                </div>
             </div>
         {% endif %}
         <div class="input">{{ form_label(form.imgPath) }}<br>{{ form_widget(form.imgPath) }}</div>

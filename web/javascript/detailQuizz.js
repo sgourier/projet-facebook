@@ -6,13 +6,18 @@ $(".questionName").on('click',displayQuestion);
 
 function displayQuestion()
 {
-    if($(this).next().is(":visible") == false)
+    var wasVisible = false;
+    if($(this).next().is(':visible'))
+    {
+        wasVisible = true;
+    }
+    $(".questionName").each(function(){
+        $(this).next().slideUp();
+    });
+
+    if(wasVisible == false)
     {
         $(this).next().slideDown();
-    }
-    else
-    {
-        $(this).next().slideUp();
     }
 }
 
@@ -90,3 +95,11 @@ function setDeleteImage(elem)
     elem.parent().parent().find('#deleteImg').val(1);
     elem.parent().remove();
 }
+
+$(window).bind('scroll', function () {
+    if ($(window).scrollTop() > 50) {
+        $('.navBack').addClass('fixed');
+    } else {
+        $('.navBack').removeClass('fixed');
+    }
+});

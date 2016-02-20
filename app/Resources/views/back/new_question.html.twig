@@ -2,7 +2,7 @@
 
 {% block content %}
     <div class="formBoxBack">
-        <div class="titleBoxBack" align="center">Question n°{{ nbQuestion }}</div>
+        <div class="titleBoxBack">Question n°{{ nbQuestion }}</div>
         {{ form_start(form) }}
         <div class="input">{{ form_label(form.description) }}<br>{{ form_widget(form.description) }}</div>
         <div class="input">{{ form_label(form.imgPath) }}<br>{{ form_widget(form.imgPath) }}</div>

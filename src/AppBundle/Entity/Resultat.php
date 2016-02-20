@@ -38,9 +38,9 @@ class Resultat
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="timeEnd", type="datetime")
+     * @ORM\Column(name="responseTime", type="datetime")
      */
-    private $timeEnd;
+    private $responseTime;
 
 	/**
 	 * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Quizz")
@@ -53,6 +53,17 @@ class Resultat
 	 * @ORM\JoinColumn(name="idUser", nullable=false)
 	 */
 	private $user;
+
+    /**
+     * Resultat constructor.
+     *
+     */
+    public function __construct()
+    {
+        $this->score        = 0;
+        $this->timeStart    = new \DateTime();
+        $this->responseTime = new \DateTime();
+    }
 
 
     /**
@@ -112,26 +123,26 @@ class Resultat
     }
 
     /**
-     * Set timeEnd
+     * Set responseTime
      *
-     * @param \DateTime $timeEnd
+     * @param \DateTime $responseTime
      * @return Resultat
      */
-    public function setTimeEnd($timeEnd)
+    public function setResponseTime($responseTime)
     {
-        $this->timeEnd = $timeEnd;
+        $this->responseTime = $responseTime;
 
         return $this;
     }
 
     /**
-     * Get timeEnd
+     * Get responseTime
      *
      * @return \DateTime 
      */
-    public function getTimeEnd()
+    public function getResponseTime()
     {
-        return $this->timeEnd;
+        return $this->responseTime;
     }
 
     /**

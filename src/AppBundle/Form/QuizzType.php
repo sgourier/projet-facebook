@@ -47,7 +47,7 @@ class QuizzType extends AbstractType
                 ),
                 'mapped' => false
             ))
-	        ->add('Valider','submit')
+            ->add('Valider','submit',array("attr"=>array("class"=>"button")))
         ;
     }
     

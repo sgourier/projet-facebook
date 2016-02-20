@@ -1,0 +1,11 @@
+<div class="questionTitle">{{ question.description }}</div>
+{% if question.getVideoPath is not null %}
+    <div class="questionVideo"></div>
+{% elseif question.imgPath is not null %}
+    <div class="questionImage"></div>
+{% endif %}
+
+<div class="responseContainer">
+    {% for response in question.reponses %}
+</div>
+

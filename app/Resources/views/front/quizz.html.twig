@@ -1,0 +1,10 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="quizzContainer">
+        <div class="quizzTitle">{{ quizz.title }}</div>
+        <div class="questionContainer">
+            {{ render(controller('AppBundle:Default:nextQuestion',{'idQuizz':quizz.id,'nbQuestion':0})) }}
+        </div>
+    </div>
+{% endblock %}

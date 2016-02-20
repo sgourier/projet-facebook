@@ -43,9 +43,9 @@ class Users
     private $email;
 
     /**
-     * @var \DateTime
+     * @var integer
      *
-     * @ORM\Column(name="birthday", type="datetime")
+     * @ORM\Column(name="birthday", type="integer")
      */
     private $birthday;
 

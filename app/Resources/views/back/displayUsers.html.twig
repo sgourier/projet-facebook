@@ -3,24 +3,33 @@
 {% block content %}
     <h2>Liste des utilisateurs</h2>
 
-    <form action="{{ path('user_datas') }}" method="post">
+    <form class="searchUserForm" action="{{ path('user_datas') }}" method="post">
         <label for="searchName">Chercher un utilisateur(nom) : </label>
         <input id="searchName" name="search" type="text">
         <input type="submit" value="Rechercher">
     </form>
 
-    {% for user in users %}
-        {{ user.nom }} | {{ user.prenom }} | {{ user.birthday|date("d/m/Y") }} | {{ user.email }} | {{ user.gender }}
-        <a href="{{ path('deleteUser',{'id':user.id}) }}">Supprimer l'uilisateur</a>
-        <br>
-    {% endfor %}
-    {% if offset > 0 %}
-        <a href="{{ path('user_datas', {'offset':offset-limit,'search':search}) }}">Précédent</a>
-    {% endif %}
-    {% if offset + limit < nbUser %}
-        <a href="{{ path('user_datas', {'offset':offset+limit,'search':search}) }}">Suivant</a>
-    {% endif %}
+    <a class="button" href="{{ path('exp_user_data') }}">Export au format CSV</a>
 
-    <a href="{{ path('exp_user_data') }}">export au format CSV</a>
+    <div class="userRow userRowHeader">
+        <div class="userCell">Nom</div><div class="userCell">Prenom</div> <div class="userCell">Age</div> <div class="userCell">Mail</div> <div class="userCell">Sexe</div>
+    </div>
+    {% for user in users %}
+        <div class="userRow">
+            <div class="userCell">{{ user.nom }}</div><div class="userCell">{{ user.prenom }}</div> <div class="userCell">{{ user.birthday }}</div> <div class="userCell">{{ user.email }}</div> <div class="userCell">{{ user.gender }}</div> <div class="userCell"><a href="{{ path('deleteUser',{'id':user.id}) }}">Supprimer l'uilisateur</a></div>
+        </div>
+    {% endfor %}
+    <div class="userOptions">
+        {% if offset > 0 %}
+            <a href="{{ path('user_datas', {'offset':offset-limit,'search':search}) }}">Précédent</a>
+        {% endif %}
+        {% if offset > 0 and offset + limit < nbUser %}
+             -
+        {% endif %}
+        {% if offset + limit < nbUser %}
+            <a href="{{ path('user_datas', {'offset':offset+limit,'search':search}) }}">Suivant</a>
+        {% endif %}
+    </div>
+
 {% endblock %}
 

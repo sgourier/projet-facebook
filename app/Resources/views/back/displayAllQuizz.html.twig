@@ -10,13 +10,13 @@
                 {% if quizz.giftImg is not null %}
                     <img src="{{ asset(quizz.getWebPath) }}" alt="quizzImg" class="allQuizzImg">
                 {% endif %}
-                <div>{{ quizz.description }}</div>
-                <div>Début le {{ quizz.dateStart|date('d/m/Y') }}</div>
-                <div>Fin le {{ quizz.dateEnd|date('d/m/Y') }}</div>
-                {% if quizz.resultats|length > 0 %}<div>Nombre de résultat : {{ quizz.resultats|length }}</div>{% endif %}
-                <div><a href="{{ path('quizz_details',{'idQuizz':quizz.id}) }}">Détails du quizz</a></div>
-                {% if quizz.dateStart > date() %}
-                {% endif %}
+                <div class="quizzDatas">
+                    <p>{{ quizz.description }}</p>
+                    <div><span class="bold">Début le </span>{{ quizz.dateStart|date('d/m/Y') }}</div>
+                    <div><span class="bold">Fin le </span>{{ quizz.dateEnd|date('d/m/Y') }}</div>
+                    {% if quizz.resultats|length > 0 %}<div>Nombre de résultat : {{ quizz.resultats|length }}</div>{% endif %}
+                    <div class="quizzLink"><a href="{{ path('quizz_details',{'idQuizz':quizz.id}) }}">Détails du quizz</a></div>
+                </div>
             </div>
         {% endfor %}
     </div>
@@ -30,8 +30,8 @@
         $(document).ready(function(){
             $('.sliderQuizz').slick({
                 infinite: false,
-                slidesToShow: 2,
-                slidesToScroll: 2
+                slidesToShow: 4,
+                slidesToScroll: 4
             });
         });
     </script>
