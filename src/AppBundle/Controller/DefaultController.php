@@ -49,6 +49,7 @@ class DefaultController extends Controller
 
 		$participated = false;
 		$lastParticipation = false;
+		$lastResults = null;
 		$user = $this->getDoctrine()->getManager()->getRepository('AppBundle:Users')->findOneByIdFacebook($this->get('session')->get('fbId'));
 
 		if($quizz != null)
@@ -67,13 +68,16 @@ class DefaultController extends Controller
 			{
 				$lastParticipation = $lastrResultCurrentUser;
 			}
+
+			$lastResults = $this->getDoctrine()->getManager()->getRepository('AppBundle:Resultat')->getClassement($lastQuizz);
 		}
 
 		return array(
 			'quizz' => $quizz,
 			'lastQuizz' => $lastQuizz,
 	        'participated' => $participated,
-            'lastParticipation' => $lastParticipation
+            'lastParticipation' => $lastParticipation,
+			'lastQuizzResults' => $lastResults
 			);
 	}
 
@@ -92,6 +96,12 @@ class DefaultController extends Controller
 	{
 		$quizz = $this->getDoctrine()->getManager()->getRepository('AppBundle:Quizz')->find($id);
 		$user = $this->getDoctrine()->getManager()->getRepository('AppBundle:Users')->findOneByIdFacebook($this->get('session')->get('fbId'));
+		$oldResult = $this->getDoctrine()->getManager()->getRepository('AppBundle:Resultat')->findOneBy(array('quizz'=>$quizz,'user'=>$user));
+
+		if(is_object($oldResult))
+		{
+			$this->getDoctrine()->getManager()->remove($oldResult);
+		}
 
 		$resultat = new Resultat();
 		$resultat->setQuizz($quizz);
@@ -124,7 +134,8 @@ class DefaultController extends Controller
 
 		return $this->render('front/question.html.twig',array(
 			'question' => $questions[$nbQuestion],
-			'nbQuestion' => $nextQuestion
+			'nbQuestion' => $nextQuestion,
+			'idQuizz' => $quizz->getId()
 		));
 	}
 
@@ -133,6 +144,7 @@ class DefaultController extends Controller
 	 */
 	public function submitQuizzAction($idQuizz)
 	{
+		$quizz = $this->getDoctrine()->getManager()->getRepository('AppBundle:Quizz')->find($idQuizz);
 		$now = new \DateTime();
 		$request = $this->get('request');
 
@@ -140,7 +152,6 @@ class DefaultController extends Controller
 
 		$score = $this->calculScore($responses);
 
-		$quizz = $this->getDoctrine()->getManager()->getRepository('AppBundle:Quizz')->find($idQuizz);
 		$user = $this->getDoctrine()->getManager()->getRepository('AppBundle:Users')->findOneByIdFacebook($this->get('session')->get('fbId'));
 		$result = $this->getDoctrine()->getManager()->getRepository('AppBundle:Resultat')->findOneBy(array('quizz'=> $quizz->getId(),'user'=>$user->getId()));
 
@@ -150,7 +161,37 @@ class DefaultController extends Controller
 		$this->getDoctrine()->getManager()->persist($result);
 		$this->getDoctrine()->getManager()->flush();
 
-		return $this->render('front/quizzFinal.html.twig');
+		return $this->render('front/quizzFinal.html.twig',array(
+			'quizz' => $quizz
+		));
+	}
+
+	private function calculScore($responses)
+	{
+		$score = 0;
+
+		$responses = json_decode($responses);
+		$repositoryResponse = $this->getDoctrine()->getManager()->getRepository('AppBundle:Reponse');
+		foreach($responses as $response)
+		{
+			$valid = true;
+			foreach($response as $values)
+			{
+				$reponse = $repositoryResponse->find($values[0]);
+
+				if($reponse->getValid() != $values[1])
+				{
+					$valid = false;
+				}
+			}
+
+			if($valid == true)
+			{
+				$score++;
+			}
+		}
+
+		return $score;
 	}
 
 	/**

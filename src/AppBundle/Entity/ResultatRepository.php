@@ -18,7 +18,7 @@ class ResultatRepository extends EntityRepository
 		$query->where('r.quizz = :quizz')
 			->orderBy('r.score','DESC')
 			->addOrderBy(
-				$query->expr()->diff('r.timeStart','r.responseTime'),'ASC'
+				$query->expr()->diff('r.timeStart','r.responseTime'),'DESC'
 			)
 			->setParameter(':quizz',$quizz);
 

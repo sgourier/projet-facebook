@@ -49,7 +49,7 @@ class Resultat
 	private $quizz;
 
 	/**
-	 * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Quizz")
+	 * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Users")
 	 * @ORM\JoinColumn(name="idUser", nullable=false)
 	 */
 	private $user;
@@ -171,10 +171,10 @@ class Resultat
     /**
      * Set user
      *
-     * @param \AppBundle\Entity\Quizz $user
+     * @param \AppBundle\Entity\Users $user
      * @return Resultat
      */
-    public function setUser(\AppBundle\Entity\Quizz $user)
+    public function setUser(\AppBundle\Entity\Users $user)
     {
         $this->user = $user;
 
@@ -184,7 +184,7 @@ class Resultat
     /**
      * Get user
      *
-     * @return \AppBundle\Entity\Quizz 
+     * @return \AppBundle\Entity\Users
      */
     public function getUser()
     {

@@ -1,0 +1,9 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="globalCadre globalCadreFinal">
+        <h1>Félicitation !</h1>
+        <div>Vous avez terminé le Quizz. Rendez-vous le {{ quizz.dateEnd|date('d/m/Y') }} pour les résultats !</div>
+        <a class="buttonParticipate" href="{{ path('homepage') }}">Accueil</a>
+    </div>
+{% endblock %}

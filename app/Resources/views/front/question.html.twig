@@ -1,11 +1,25 @@
 <div class="questionTitle">{{ question.description }}</div>
 {% if question.getVideoPath is not null %}
-    <div class="questionVideo"></div>
+    <div class="questionAsset">
+        <iframe width="560" height="315" src="{{ question.getVideoPath }}" frameborder="0" allowfullscreen></iframe>
+    </div>
 {% elseif question.imgPath is not null %}
-    <div class="questionImage"></div>
+    <div class="questionAsset"><img src="{{ question.getWebPath }}"></div>
 {% endif %}
 
 <div class="responseContainer">
     {% for response in question.reponses %}
+        <div class="responseButton" id="button-{{ loop.index }}">{{ response.description }}</div>
+        <input id="response{{ loop.index }}" class="responseInput hidden" type="checkbox" >
+        <input id="responseId" class="hidden" type="hidden" value="{{ response.id }}" >
+    {% endfor %}
+    <input id="idQuestion" type="hidden" value="{{ question.id }}">
 </div>
 
+<div class="nextQuestionButton">
+    {% if nbQuestion > 0 %}
+        <div class="responseButton" onClick="nextQuestion('{{ path('next_question',{'idQuizz':idQuizz,'nbQuestion':nbQuestion}) }}')">Question suivante</div>
+    {% else %}
+        <div class="responseButton" onClick="submitQuizz('{{ path('submit_quizz',{'idQuizz':idQuizz}) }}')">Terminer le Quizz</div>
+    {% endif %}
+</div>

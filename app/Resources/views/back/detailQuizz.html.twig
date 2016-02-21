@@ -58,7 +58,7 @@
                     <div class="questionContent">
                         <div class="questionTitle">{{ question.description }}</div>
                         {% if question.imgPath is not null %}<div><img src="{{ asset(question.getWebPath) }}"></div>{% endif %}
-                        {% if question.videoPath is not null %}<div><video src="{{ question.videoPath }}"></video></div>{% endif %}
+                        {% if question.videoPath is not null %}<div><iframe width="560" height="315" src="{{ question.getVideoPath }}" frameborder="0" allowfullscreen></iframe></div>{% endif %}
                         <div>
                             {% for reponse in question.reponses%}
                                 <div class="responseDiv"> Réponse {{ loop.index }} : {{ reponse.description }} <div>Valide : {% if reponse.valid == true %}oui{% else %}non{% endif %}</div></div>

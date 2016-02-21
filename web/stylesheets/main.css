@@ -20,6 +20,13 @@ a {
     color: #69CBAA;
 }
 
+h1
+{
+    color: #69cbaa;
+    font-family: "texgy";
+    font-size: 35px;
+}
+
 #nav_title{
   font-family: "texgy";
 }
@@ -379,6 +386,7 @@ h3
     color: #484848;
     font-size: 20px;
     font-family: "texgy";
+    margin-bottom: 20px;
 }
 
 .responseDiv
@@ -407,10 +415,136 @@ h3
     color: #FFF;
     font-size: 35px;
     margin-top: 15px;
+    text-decoration: none;
 }
+
 
 .buttonParticipate:hover
 {
     cursor: pointer;
     background: #72ddb9;
+    text-decoration: none;
+}
+
+.questionContainer .questionTitle
+{
+    display: block;
+    clear: both;
+    float: none;
+}
+
+.questionContainer .questionAsset
+{
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.questionContainer .responseButton
+{
+    padding: 15px 25px;
+    width: 235px;
+    margin-left: 35px;
+    background: #69CBAA;
+    border-radius: 15px;
+    display: inline-block;
+    color: #FFF;
+    font-size: 25px;
+    text-align: center;
+    border: 3px solid #69cbaa;
+    margin-bottom: 25px;
+}
+
+.questionContainer .responseButton:hover
+{
+    cursor: pointer;
+    background: #72ddb9;
+}
+
+.globalCadre
+{
+    border: 3px solid #69cbaa;
+    padding: 80px;
+    border-radius: 25px;
+    margin: 0 auto;
+    margin-top: 25px;
+    width: 80%;
+}
+
+.globalCadreFinal
+{
+    padding-top: 100px;
+    width: 600px;
+    text-align: center;
+}
+
+.nextQuestionButton
+{
+    text-align: center;
+    float: none;
+    clear: both;
+    display: block;
+    padding-top: 25px;
+}
+
+.responseContainer
+{
+    text-align: center;
+}
+
+.nextQuestionButton .responseButton
+{
+    margin-left: 0;
+}
+
+.quizzTitle
+{
+    font-size: 30px;
+    color: #69cbaa;
+    font-family: "texgy";
+    margin-bottom: 30px;
+}
+
+.listClassement
+{
+    vertical-align: middle;
+    font-size: 30px;
+    margin-bottom: 5px;
+    background: #e8e8e8;
+}
+
+.goldClassement
+{
+    background: gold;
+}
+
+.silverClassement
+{
+    background: silver;
+}
+
+.bronzeClassement
+{
+    background: #CD7F32;
+}
+
+.listClassement img
+{
+    vertical-align: middle;
+}
+
+.listClassement a
+{
+    text-decoration: none;
+}
+
+.listClassement a:hover
+{
+    text-decoration: underline;
+}
+
+.classementNumber
+{
+    display: inline-block;
+    width:20px;
+    padding: 0 10px;
 }
