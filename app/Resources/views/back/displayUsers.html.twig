@@ -5,8 +5,8 @@
 
     <form class="searchUserForm" action="{{ path('user_datas') }}" method="post">
         <label for="searchName">Chercher un utilisateur(nom) : </label>
-        <input id="searchName" name="search" type="text">
-        <input type="submit" value="Rechercher">
+        <input id="searchName" name="searchName" type="text">
+        <input type="submit" class="searchButton" value="Rechercher">
     </form>
 
     <a class="button" href="{{ path('exp_user_data') }}">Export au format CSV</a>

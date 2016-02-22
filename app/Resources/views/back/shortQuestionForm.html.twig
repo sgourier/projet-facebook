@@ -10,7 +10,7 @@
         </div>
         <div class="input">{{ form_label(form.description) }}<br>{{ form_widget(form.description) }}</div>
         {% if question.imgPath is not null %}
-            <a>
+            <div>
                 <img src="{{ asset(question.getWebPath) }}" alt="Lot gagnant">
                 <div>
                     <a class="button" onclick="setDeleteImage($(this));">Supprimer l'image</a>
@@ -30,6 +30,9 @@
         <div class="input">{{ form_label(form.response4) }}<br>{{ form_widget(form.response4) }}<br>
             {{ form_label(form.correct4) }}{{ form_widget(form.correct4) }}</div>
         <div class="input"><br>{{ form_widget(form.Valider) }}</div>
+        {% if question.id is not null %}
+            <a onclick="removeQuestion($(this),'{{ path('remove_question',{'idQuestion':question.id,'idQuizz':question.quizz.id}) }}')" class="removeButton">Supprimer</a>
+        {% endif %}
         <input type="hidden" value="1" name="ajax">
         <input type="hidden" value="0" name="deleteImg" id="deleteImg">
         {{ form_end(form) }}

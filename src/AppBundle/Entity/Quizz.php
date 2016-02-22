@@ -47,7 +47,7 @@ class Quizz
 
     /**
      * @var string $giftImg
-     * @Assert\Image( maxSize = "1024k", mimeTypesMessage = "Merci de fournir une image valide")
+     * @Assert\Image( maxSize = "4096k", mimeTypesMessage = "Merci de fournir une image valide")
      * @ORM\Column(name="giftImg", type="string", length=255, nullable=true)
      */
     private $giftImg;
@@ -119,6 +119,8 @@ class Quizz
 		$this->dateUpd = new \DateTime();
 		$this->dateAdd = new \DateTime();
 		$this->giftImg = null;
+		$this->startNotified = false;
+		$this->endNotified = false;
 	}
 
     /**

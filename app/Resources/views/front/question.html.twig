@@ -4,7 +4,7 @@
         <iframe width="560" height="315" src="{{ question.getVideoPath }}" frameborder="0" allowfullscreen></iframe>
     </div>
 {% elseif question.imgPath is not null %}
-    <div class="questionAsset"><img src="{{ question.getWebPath }}"></div>
+    <div class="questionAsset"><img src="{{ asset(question.getWebPath) }}" alt="Image Question"></div>
 {% endif %}
 
 <div class="responseContainer">

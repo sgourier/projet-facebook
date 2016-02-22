@@ -20,10 +20,6 @@ use AppBundle\Form\QuestionType;
 use AppBundle\Entity\Question;
 use AppBundle\Entity\Reponse;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Serializer\Serializer;
-use Symfony\Component\Serializer\Encoder\XmlEncoder;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 
 class BackController extends Controller
 {
@@ -94,8 +90,6 @@ class BackController extends Controller
 
 	/**
 	 * @Route("/newQuizz", name="new_quizz")
-	 * @param integer $idQuizz id du quizz en cas de modification
-	 *
 	 * @return object
 	 */
 	public function newQuizzAction()
@@ -175,9 +169,9 @@ class BackController extends Controller
 			return new Response('error');
 		}
 
-		if($ajax == false)
+		if($ajax == null)
 		{
-			return $this->redirect($this->generateUrl("new_question",array(
+			return $this->redirect($this->generateUrl("quizz_details",array(
 				'idQuizz' => $quizz->getId()
 			)));
 		}
@@ -195,7 +189,7 @@ class BackController extends Controller
 		$limit = 50;
 		if($this->get('request')->isMethod('POST'))
 		{
-			$search = $this->get('request')['search'];
+			$search = $this->get('request')->get('searchName');
 		}
 
 		$users = $this->getDoctrine()->getManager()->getRepository('AppBundle:Users')->getLimitedUsers($offset,$search,$limit);
@@ -216,7 +210,7 @@ class BackController extends Controller
 	 */
 	public function exportUserDatasAction()
 	{
-		$em = $this->getDoctrine()->getEntityManager();
+		$em = $this->getDoctrine()->getManager();
 
 		$iterableResult = $em->getRepository('AppBundle:Users')->createQueryBuilder('a')->getQuery()->iterate();
 		$handle = fopen('php://memory', 'r+');
@@ -226,7 +220,7 @@ class BackController extends Controller
 				$row[0]->getNom(),
 				$row[0]->getPrenom(),
 				$row[0]->getEmail(),
-				$row[0]->getBirthday()->format('d/m/Y'),
+				$row[0]->getBirthday(),
 				$row[0]->getGender(),
 				$row[0]->getIdFacebook()
 			));
@@ -373,7 +367,7 @@ class BackController extends Controller
 			{
 				if($modif)
 				{
-					$response = $this->getDoctrine()->getManager()->getRepository('AppBundle:Reponse')->findBy(array('question'=>$question->getId()),array(),1,$cptReponse-1)[0];
+					$response = $this->getDoctrine()->getManager()->getRepository('AppBundle:Reponse')->findOneBy(array('question'=>$question->getId()),array(),1,$cptReponse-1);
 				}
 				else
 				{
@@ -397,11 +391,40 @@ class BackController extends Controller
 		$quizz = $this->getDoctrine()->getManager()->getRepository('AppBundle:Quizz')->find($idQuizz);
 		$question = $this->getDoctrine()->getManager()->getRepository('AppBundle:Question')->find($idQuestion);
 
+		foreach($question->getReponses() as $response)
+		{
+			$this->getDoctrine()->getManager()->remove($response);
+		}
+
 		$quizz->removeQuestion($question);
+		$this->getDoctrine()->getManager()->remove($question);
 		$this->getDoctrine()->getManager()->persist($quizz);
 		$this->getDoctrine()->getManager()->flush();
 
 		return new Response('ok');
+	}
+
+	/**
+	 * @Route("/removeQuizz/{idQuizz}", name="remove_quizz")
+	 */
+	public function removeQuizzAction($idQuizz)
+	{
+		$quizz = $this->getDoctrine()->getManager()->getRepository('AppBundle:Quizz')->find($idQuizz);
+
+		foreach($quizz->getQuestions() as $question)
+		{
+			foreach($question->getReponses() as $response)
+			{
+				$this->getDoctrine()->getManager()->remove($response);
+			}
+
+			$this->getDoctrine()->getManager()->remove($question);
+		}
+
+		$this->getDoctrine()->getManager()->remove($quizz);
+		$this->getDoctrine()->getManager()->flush();
+
+		return $this->redirect($this->generateUrl('all_quizz'));
 	}
 
 	/**
@@ -472,10 +495,16 @@ class BackController extends Controller
 				$users = $this->getDoctrine()->getManager()->getRepository('AppBundle:Users')->findAll();
 				foreach($users as $user)
 				{
-					$fbServ->sendNotification($user->getId(),$template,$ref,$href);
+					$fbServ->sendNotification($user->getId(),$template,$ref,$href,$user->getToken());
 				}
+
+				$quizz->setStartNotified(true);
+				$this->getDoctrine()->getManager()->persist($quizz);
 			}
 		}
+
+		$this->getDoctrine()->getManager()->flush();
+		return new Response('ok');
 	}
 
 	/**
@@ -485,7 +514,6 @@ class BackController extends Controller
 	{
 		$template = "Le quizz auquel vous avez participé est maintenant fini, venez consulter votre résultat !";
 		$ref = "closedQuizz";
-		$href = $this->generateUrl('resultPage');
 
 		$quizzList = $this->getDoctrine()->getManager()->getRepository('AppBundle:Quizz')->findBy(array('active'=>1,'endNotified'=>0));
 		$now = new \DateTime();
@@ -495,6 +523,7 @@ class BackController extends Controller
 		{
 			if($quizz->getDateEnd() < $now)
 			{
+				$href = $this->generateUrl('general_classement',array('idQuizz'=>$quizz->getId()));
 				$users = $this->getDoctrine()->getManager()->getRepository('AppBundle:Users')->findAll();
 				foreach($users as $user)
 				{
@@ -503,34 +532,18 @@ class BackController extends Controller
 					{
 						if($result->getQuizz()->getId() == $quizz->getId())
 						{
-							$fbServ->sendNotification($user->getId(),$template,$ref,$href);
+							$fbServ->sendNotification($user->getId(),$template,$ref,$href,$user->getToken());
 						}
 					}
 				}
+
+				$quizz->setEndNotified(true);
+				$this->getDoctrine()->getManager()->persist($quizz);
 			}
 		}
-	}
 
-	/**
-	 * @Route("/checkBirthdayNotif", name="check_close_quizz_notif")
-	 */
-	public function checkBirthdayNotifAction()
-	{
-		$template = "Joyeux anniversaire ! En guise de cadeau vous avez le droit à un nouvel essai sur le Quizz en cours !";
-		$ref = "birthday";
-		$href = $this->generateUrl('homepage');
+		$this->getDoctrine()->getManager()->flush();
 
-		$now = new \DateTime();
-		$fbServ = $this->get('facebook_service');
-
-		$users = $this->getDoctrine()->getManager()->getRepository('AppBundle:Users')->findAll();
-
-		foreach($users as $user)
-		{
-			if($user->getBirthday() != null && $user->getBirthday()->format('Y-m-d') == $now->format('Y-m-d'))
-			{
-				$fbServ->sendNotification($user->getId(),$template,$ref,$href);
-			}
-		}
+		return new Response('ok');
 	}
 }

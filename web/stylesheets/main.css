@@ -31,6 +31,12 @@ h1
   font-family: "texgy";
 }
 
+#nav_title a
+{
+    color: #FFFFFF;
+    text-decoration: none;
+}
+
 .cadre{
     font-family: "texgy";
     color:#69CBAA;
@@ -547,4 +553,108 @@ h3
     display: inline-block;
     width:20px;
     padding: 0 10px;
+}
+
+.removeButton
+{
+    display: inline-block;
+    background: #ac474a;
+    border: 1px solid #86373a;
+    color: #FFF;
+    padding: 10px 25px;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.removeButton:hover
+{
+    background: #ca5357;
+    border: 1px solid #9e4144;
+    cursor: pointer;
+}
+
+.linkClassement
+{
+    font-size: 25px;
+    text-decoration: none;
+}
+
+.linkClassement:hover
+{
+    text-decoration: underline;
+}
+
+.listClassementQuizz
+{
+    padding: 50px;
+    left: 5%;
+    font-size: 20px;
+    width: 25%;
+}
+
+.listClassementQuizz a
+{
+    text-decoration: none;
+}
+
+.listClassementQuizz a:hover
+{
+    text-decoration: underline;
+}
+
+.classementContent
+{
+    padding: 50px;
+    left:40%;
+    height: 800px;
+    list-style-type: none;
+}
+
+.classementContent .liste
+{
+    max-height: 550px;
+    overflow: auto;
+}
+
+.headerButton
+{
+    border: 2px solid #FFFFFF;
+    border-radius: 5px;
+    color: #FFFFFF;
+    text-decoration: none;
+    background: #77e6c1;
+    padding: 5px 15px;
+    font-size: 18px;
+    font-family: "texgy";
+    float: left;
+    margin-top: 15px;
+    margin-left: 30px;
+}
+
+.headerButton:hover
+{
+    background: #83f4cf;
+    cursor: pointer;
+}
+
+img
+{
+    max-width: 500px;
+    max-height: 500px;
+}
+
+.searchButton
+{
+    border: 2px solid #FFFFFF;
+    border-radius: 5px;
+    color: #FFFFFF;
+    background: #69CBAA;
+    padding: 5px 15px;
+    font-family: "texgy";
+}
+
+.searchButton:hover
+{
+    cursor: pointer;
+    background: #70d8b5;
 }

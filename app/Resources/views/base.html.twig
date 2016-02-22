@@ -13,7 +13,12 @@
         <link rel="stylesheet" href="{{ asset('stylesheets/slick-theme.css') }}" />
     </head>
     <body>
-        <nav><span id="nav_title">DELIQUIZZ</span></nav>
+        <nav>
+            {% if app.session.get('roleUser') == 'admin' %}
+                <a class="headerButton" href="{{ path('back_menu') }}">Administration</a>
+            {% endif %}
+            <span id="nav_title"><a href="{{ path('homepage') }}">DELIQUIZZ</a></span>
+        </nav>
         {% block body %}{% endblock %}
         {% block javascripts %}
             <script src="{{ asset('javascript/jquery-2.2.0.min.js') }}" type="text/javascript"></script>
@@ -21,6 +26,7 @@
             <script src="{{ asset('javascript/datetimepicker/build/jquery.datetimepicker.full.min.js') }}" type="text/javascript"></script>
             <script src="{{ asset('javascript/jquery.form.js') }}" type="text/javascript"></script>
             <script src="{{ asset('javascript/frontQuizz.js') }}" type="text/javascript"></script>
+
         {% endblock %}
     </body>
 </html>

@@ -77,12 +77,12 @@ class FacebookFunctions
 		{
 			try
 			{
-				$fbLogger->get('/'.$idUser.'/notifications?template='.$template.'&amp;href='.$href.'&amp;ref='.$ref,$userToken);
+				$fbLogger->request('/'.$idUser.'/notifications?access_token='.$this->appId.'|'.$this->appSecret.'&template='.$template.'&href='.$href.'&ref='.$ref,$userToken);
 				return true;
 			}
 			catch(Facebook\Exceptions\FacebookResponseException $e)
 			{
-				return false;
+				return $e->getMessage();
 			}
 		}
 
@@ -92,5 +92,6 @@ class FacebookFunctions
 	function isAdmin()
 	{
 		$fb = $this->fbLogger();
+		$fb->getCanvasHelper()->getAppData();
 	}
 }

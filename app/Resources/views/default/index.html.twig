@@ -35,13 +35,14 @@
                 {% for resultat in lastQuizzResults|slice(0,10) %}
                     <li class="listClassement {% if loop.index == 1 %}goldClassement{% elseif loop.index == 2 %}silverClassement{% elseif loop.index == 3 %}bronzeClassement{% endif %}">
                         <span class="classementNumber">{{ loop.index }}</span>
-                        <img src="http://graph.facebook.com/{{ resultat.user.idFacebook }}/picture?type=square" alt="userProfilePicture">
-                        <a href="https://www.facebook.com/{{ resultat.user.idFacebook }}" target="_blank">{{ resultat.user.nom }} {{ resultat.user.prenom }}</li></a>
+                        <img src="https://graph.facebook.com/{{ resultat.user.idFacebook }}/picture?type=square" alt="userProfilePicture">
+                        <a href="https://www.facebook.com/{{ resultat.user.idFacebook }}" target="_blank">{{ resultat.user.nom }} {{ resultat.user.prenom }}</a>
+                    </li>
                 {% else %}
                     Personne n'as participé à ce Quizz :(
                 {% endfor %}
                 {% if lastQuizzResults|length > 0 %}
-                    </br><li><a href="#">Voir plus ...</a></li>
+                    </br><li><a class="linkClassement" href="{{ path('general_classement',{'idQuizz':lastQuizz.id}) }}">Classement complet</a></li>
                 {% endif %}
             {% else %}
                 Aucun Quizz terminé pour le moment

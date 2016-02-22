@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="cadre listClassementQuizz">
+        {% for fQuizz in finishedQuizz %}
+            {% if fQuizz.id == quizz.id %}
+                <div>
+                    {{ quizz.title }} fini le {{ quizz.dateEnd|date('d/m/Y') }}
+                </div>
+            {% else %}
+                <a href="{{ path('general_classement', {'idQuizz': fQuizz.id}) }}">{{ quizz.title }} fini le {{ quizz.dateEnd|date('d/m/Y') }}</a>
+            {% endif %}
+        {% endfor %}
+    </div>
+    <div class="cadre classementContent">
+        <h1>Classement générale du Quizz : {{ quizz.title }}</h1>
+        {% if resultFinded == true %}
+            Vous êtes arrivé {{ pos }}{% if pos == 1 %}er(e){% else %}ème{% endif %} à ce Quizz !
+        {% endif %}
+        <div class="liste">
+            {% for resultat in results %}
+                <div class="listClassement {% if loop.index == 1 %}goldClassement{% elseif loop.index == 2 %}silverClassement{% elseif loop.index == 3 %}bronzeClassement{% endif %}">
+                    <span class="classementNumber">{{ loop.index }}</span>
+                    <img src="https://graph.facebook.com/{{ resultat.user.idFacebook }}/picture?type=square" alt="userProfilePicture">
+                    <a href="https://www.facebook.com/{{ resultat.user.idFacebook }}" target="_blank">{{ resultat.user.nom }} {{ resultat.user.prenom }}</a>
+                </div>
+            {% else %}
+                Personne n'as participé à ce Quizz :(
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

@@ -33,6 +33,8 @@ class DefaultController extends Controller
 			{
 				$user = $this->container->get('facebook_service')->getFBUser($userToken);
 				$session->set('fbId',$user->getId());
+				$userApp = $this->getDoctrine()->getManager()->getRepository('AppBundle:Users')->findOneByIdFacebook($user->getId());
+				$session->set('roleUser',$userApp->getRoles());
 			}
 			catch(Facebook\Exceptions\FacebookSDKException $e) {
 				return $this->redirect($this->generateUrl('login'));
@@ -195,10 +197,33 @@ class DefaultController extends Controller
 	}
 
 	/**
-	 * @Route("/generalClassement", name="general_classement")
+	 * @Route("/generalClassement/{idQuizz}", name="general_classement")
 	 */
-	public function generalClassementAction()
+	public function generalClassementAction($idQuizz)
 	{
-		return $this->render('front/policies.html.twig');
+		$quizz = $this->getDoctrine()->getManager()->getRepository('AppBundle:Quizz')->find($idQuizz);
+		$results = $this->getDoctrine()->getManager()->getRepository('AppBundle:Resultat')->getClassement($quizz);
+		$pos = 1;
+		$resultFinded = false;
+
+		foreach($results as $result)
+		{
+			if($result->getUser()->getIdFacebook() == $this->get('session')->get('fbId'))
+			{
+				$resultFinded = true;
+				break;
+			}
+			$pos++;
+		}
+
+		$oldQuizz = $this->getDoctrine()->getManager()->getRepository('AppBundle:Quizz')->getOldQuizz();
+
+		return $this->render('front/classement.html.twig',array(
+			'results' => $results,
+			'pos' => $pos,
+			'quizz' => $quizz,
+			'resultFinded' => $resultFinded,
+			'finishedQuizz' => $oldQuizz
+		));
 	}
 }

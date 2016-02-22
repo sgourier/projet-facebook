@@ -90,6 +90,36 @@ function modifQuestionSuccessCallBack(responseText,status,xhr,form)
     }
 }
 
+function removeQuestion(elem,path)
+{
+    if(confirm('Attention, cette action est irreversible. Continuer ?'))
+    {
+        $.ajax({
+            url: path,
+            method: 'POST'
+        }).done(function(data)
+        {
+            if(data == "ok")
+            {
+                elem.parents('.quizzQuestion').nextAll('.questionName ').each(function(){
+                    var text = $(this).html();
+                    var oldNb = text.substring(text.search('n°')+2);
+                    var newNb = oldNb - 1;
+                    $(this).html(text.replace(oldNb,newNb))
+                });
+
+                var text = $('#newQuestionTitle').html();
+                var oldNb = text.substring(text.search('n°')+2);
+                var newNb = oldNb - 1;
+                $('#newQuestionTitle').html(text.replace(oldNb,newNb));
+
+                elem.parents('.quizzQuestion').prev().remove();
+                elem.parents('.quizzQuestion').remove();
+            }
+        });
+    }
+}
+
 function setDeleteImage(elem)
 {
     elem.parent().parent().find('#deleteImg').val(1);
@@ -101,5 +131,12 @@ $(window).bind('scroll', function () {
         $('.navBack').addClass('fixed');
     } else {
         $('.navBack').removeClass('fixed');
+    }
+});
+
+$('#deleteQuizz').on('click',function(e){
+    if(!confirm('Attention, cette action est irreversible. Continuer ?'))
+    {
+        e.preventDefault();
     }
 });

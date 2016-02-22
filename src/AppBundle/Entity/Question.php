@@ -33,7 +33,7 @@ class Question
 
     /**
      * @var string $imgPath
-     * @Assert\Image( maxSize = "1024k", mimeTypesMessage = "Merci de fournir une image valide")
+     * @Assert\Image( maxSize = "4096k", mimeTypesMessage = "Merci de fournir une image valide")
      * @ORM\Column(name="imgPath", type="text", nullable=true)
      */
     private $imgPath;
@@ -220,7 +220,14 @@ class Question
         if(file_exists($this->getFullImagePath()))
             unlink($this->getFullImagePath());
         if(is_dir($this->getUploadRootDir()))
+        {
+            foreach (scandir($this->getUploadRootDir()) as $item) {
+                if($item != '.' && $item != '..')
+                    unlink($this->getUploadRootDir().$item);
+            }
+
             rmdir($this->getUploadRootDir());
+        }
     }
 
     /**

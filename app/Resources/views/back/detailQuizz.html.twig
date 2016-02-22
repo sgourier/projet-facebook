@@ -9,7 +9,7 @@
                 <div id="successQuizzSave">
                     Changements sauvegardés
                 </div>
-                <div id="errorQuizzSave" class="error hidden">
+                <div id="errorQuizzSave" class="errorQuizzSave error hidden">
                     Attention les information entrées ne sont pas valides. Un seul quizz peut être actif en même temps.
                 </div>
                 {{ form_start(formQuizz) }}
@@ -27,6 +27,7 @@
                 <div class="input">{{ form_label(formQuizz.datetimeStart) }}<br>{{ form_widget(formQuizz.datetimeStart) }}</div>
                 <div class="input">{{ form_label(formQuizz.datetimeEnd) }}<br>{{ form_widget(formQuizz.datetimeEnd) }}</div>
                 <div class="input"><br>{{ form_widget(formQuizz.Valider) }}</div>
+                <a id="deleteQuizz" href="{{ path('remove_quizz',{'idQuizz':quizz.id}) }}" class="removeButton">Supprimer</a>
                 <input type="hidden" name="ajax" value="1">
                 <input type="hidden" value="0" name="deleteImg" id="deleteImg">
                 {{ form_end(formQuizz) }}
